@@ -1,0 +1,12 @@
+# File handling and moving around
+alias cd..="cd .."
+alias ls="ls --color=auto"
+alias ll="ls -l --color=auto"
+
+# General
+alias tree="tree -C"
+alias python="python3"
+alias curl="curl -w '\n'" # Add newline after response
+
+# Git
+alias glog="git log --graph --color=always --format=\"%C(auto)%h%d %s %C(green)%C(bold)%cr\""

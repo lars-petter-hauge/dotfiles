@@ -1,0 +1,22 @@
+#!/bin/bash
+
+path=$1
+name=$(basename -- $1)
+
+cd ~/$path
+tmux new-session -s $name -n code -d
+
+# Window layout
+tmux split-window -h -l 10%
+tmux split-window -v
+
+# output "git status" in top-right pane
+tmux select-pane -t 0
+tmux send-keys -t 1 "git status" Enter
+
+# Open vim w/ vertical split in left-most pane
+tmux select-pane -t 0
+tmux send-keys -t 0 "vim -O2 ." Enter
+
+sleep 1s
+tmux at -t $name
