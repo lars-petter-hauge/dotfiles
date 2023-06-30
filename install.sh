@@ -1,19 +1,14 @@
 #!/bin/bash
 
 olddir=${HOME}/dotfiles_old
-
-if [ ! -d "vimconf" ]; then
-    git clone https://github.com/timss/vimconf.git
-fi
-
-ln -s -f -r vimconf/.vimrc .vimrc
-
 mkdir -p $olddir
 
-files=".bashrc .vimrc.plugins .vimrc .tmux.conf .config/nvim/init.lua"
+files=".tmux.conf .vimrc .vimrc.plugins .config/nvim/init.vim"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     files="${files} .zshrc"
+else
+    files="${files} .bashrc"
 fi
 
 for file in $files; do
@@ -24,6 +19,3 @@ for file in $files; do
 
     ln -s  $(pwd)/$file ${HOME}/$file
 done
-
-
-source $HOME/.bashrc

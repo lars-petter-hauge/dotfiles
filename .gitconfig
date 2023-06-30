@@ -18,7 +18,7 @@
 
     # misc
     s = status
-    
+
     # fancy log views that'll blow your mind
     ls  = log --pretty=format:'%C(bold blue)%ad %C(bold magenta)%an %C(reset)%C(white)%s%C(reset) %C(reset)%C(bold yellow)%d%C(reset)' --decorate --date=relative
     lg  = log --graph --all --format=format:'%C(bold blue)%ad %C(bold magenta)%an %C(reset)%C(white)%s%C(reset) %C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --decorate --date=short
