@@ -3,7 +3,7 @@
 olddir=${HOME}/dotfiles_old
 mkdir -p $olddir
 
-files=".tmux.conf .vimrc .vimrc.plugins .config/nvim/init.vim"
+files=".tmux.conf .vimrc .vimrc.plugins .config/nvim/init.lua"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     files="${files} .zshrc"

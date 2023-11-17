@@ -24,3 +24,12 @@ if [[ "$OSTYPE" == "darwin"* && "$SHELL" == "/bin/bash" ]]; then
     . ~/.git-completion.bash
 fi
 
+# <start pyenv config>
+# remove if not using pyenv
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+# <end pyenv config>

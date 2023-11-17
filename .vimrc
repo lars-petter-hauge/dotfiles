@@ -72,3 +72,4 @@ colorscheme zenburn
 
 " hide .pyc files
 let NERDTreeIgnore=['\.pyc$', '\~$']
+
