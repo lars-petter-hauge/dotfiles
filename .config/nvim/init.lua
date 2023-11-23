@@ -14,7 +14,6 @@ vim.opt.laststatus=2
 vim.opt.number=true             -- add line number
 vim.opt.syntax="on"
 vim.opt.scrolloff=20            -- keep n lines above/below cursor (pad lines around cursor)
-vim.cmd [[colorscheme zenburn]]
 
 vim.g.mapleader = " "
 vim.g.python3_host_prog = "/home/lars/.pyenv/versions/nvim_env/bin/python"
@@ -71,5 +70,8 @@ require("lazy").setup({
   {'flazz/vim-colorschemes'},
   {'neovim/nvim-lspconfig'},
   })
+
+vim.cmd([[colorscheme zenburn]])
+
 --local lspconfig = require('lspconfig')
 --lspconfig.pyright.setup {}
