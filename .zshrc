@@ -8,8 +8,7 @@ export LC_CTYPE=en_US.UTF-8
 
 unsetopt autopushd
 
-# hide user@hostname
-prompt_context(){}
+PROMPT='%(?.%F{green}√.%F{red}?%?)%f %B%F{240}%1~%f%b %# '
 
 export PIPENV_PYTHON="$HOME/.pyenv/shims/python"
 
