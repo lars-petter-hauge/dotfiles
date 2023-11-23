@@ -15,8 +15,10 @@ vim.opt.number=true             -- add line number
 vim.opt.syntax="on"
 vim.opt.scrolloff=20            -- keep n lines above/below cursor (pad lines around cursor)
 
+HOME = os.getenv("HOME")
+
 vim.g.mapleader = " "
-vim.g.python3_host_prog = "/home/lars/.pyenv/versions/nvim_env/bin/python"
+vim.g.python3_host_prog = HOME .. "/.pyenv/versions/nvim_env/bin/python"
 -- Navigate splits
 vim.keymap.set('n','<C-J>','<C-W><C-J>')
 vim.keymap.set('n','<C-K>','<C-W><C-K>')
