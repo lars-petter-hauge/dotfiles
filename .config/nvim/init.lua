@@ -37,7 +37,19 @@ vim.keymap.set('i','<A-k>', '<Esc>:m .-2<CR>==gi')
 vim.keymap.set('v','<A-j>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v','<A-k>', ":m '<-2<CR>gv=gv")
 
+vim.api.nvim_create_augroup("AutoFormat", {})
 
+vim.api.nvim_create_autocmd(
+    "BufWritePost",
+    {
+        pattern = "*.py",
+        group = "AutoFormat",
+        callback = function()
+            vim.cmd("silent !black --quiet %")
+            vim.cmd("edit")
+        end,
+    }
+)
 ----------- Plugin bindings -----------
 vim.keymap.set({'n','i','v'},'<C-n>', ':NERDTreeToggle<CR>')
 
