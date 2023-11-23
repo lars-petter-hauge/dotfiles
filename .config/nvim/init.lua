@@ -49,22 +49,27 @@ vim.keymap.set({'n','i','v'},'<leader>fd','<cmd>Telescope diagnostics<cr>')
 
 ------------ Plugins --------------
 
--- Only required if you have packer configured as `opt`
-vim.cmd [[packadd packer.nvim]]
-
-return require('packer').startup(function(use)
-  -- Packer can manage itself
-  use 'wbthomason/packer.nvim'
-
-  use 'preservim/nerdtree' 
-
-  use {
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+require("lazy").setup({
+  {"folke/which-key.nvim"},
+  {'preservim/nerdtree'} ,
+  {
   'nvim-telescope/telescope.nvim', tag = '0.1.4',
-  requires = { {'nvim-lua/plenary.nvim'} }
-  }
-  use 'flazz/vim-colorschemes'
-  use 'neovim/nvim-lspconfig'
-end)
-
+  dependencies = { 'nvim-lua/plenary.nvim' }
+  },
+  {'flazz/vim-colorschemes'},
+  {'neovim/nvim-lspconfig'},
+  })
 --local lspconfig = require('lspconfig')
 --lspconfig.pyright.setup {}
