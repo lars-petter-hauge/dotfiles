@@ -74,12 +74,16 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+
+
 require("lazy").setup({
-  {"folke/which-key.nvim"},
-  {'preservim/nerdtree'} ,
-  {
-  'nvim-telescope/telescope.nvim', tag = '0.1.4',
-  dependencies = { 'nvim-lua/plenary.nvim' }
+    {"folke/which-key.nvim"},
+    {"nvim-treesitter/nvim-treesitter", ensure_installed={"python"}, build = ":TSUpdate"},
+    {'preservim/nerdtree'},
+    {'nvim-telescope/telescope.nvim', tag = '0.1.4',
+        dependencies = { 'nvim-lua/plenary.nvim' }
+    },
+    { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap","mfussenegger/nvim-dap-python"}
   },
   {'flazz/vim-colorschemes'},
   {'neovim/nvim-lspconfig'},
@@ -87,6 +91,25 @@ require("lazy").setup({
 
 vim.cmd([[colorscheme zenburn]])
 
+require('dap-python').setup("~/.pyenv/versions/nvim_env/bin/python")
+
+table.insert(require('dap').configurations.python, {
+  type = 'python',
+  request = 'launch',
+  name = 'Debug file',
+  program = '${file}',
+})
+require("dapui").setup()
+local dap, dapui = require("dap"), require("dapui")
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
 local lspconfig = require('lspconfig')
 lspconfig.pyright.setup {}
 
