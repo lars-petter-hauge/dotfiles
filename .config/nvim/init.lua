@@ -91,7 +91,7 @@ require("lazy").setup({
 
 vim.cmd([[colorscheme zenburn]])
 
-require('dap-python').setup("~/.pyenv/versions/nvim_env/bin/python")
+require('dap-python').setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
 
 table.insert(require('dap').configurations.python, {
   type = 'python',
