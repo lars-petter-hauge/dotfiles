@@ -12,6 +12,7 @@ vim.opt.clipboard="unnamedplus" -- access clipboard outside of vim
 vim.opt.mouse=n
 vim.opt.laststatus=2
 vim.opt.number=true             -- add line number
+vim.opt.relativenumber=true     -- and make them relative
 vim.opt.syntax="on"
 vim.opt.scrolloff=20            -- keep n lines above/below cursor (pad lines around cursor)
 
