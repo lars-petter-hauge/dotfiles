@@ -86,6 +86,7 @@ require("lazy").setup({
     },
     { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap","mfussenegger/nvim-dap-python"}
   },
+   {'folke/which-key.nvim'},
   {'flazz/vim-colorschemes'},
   {'neovim/nvim-lspconfig'},
   })
