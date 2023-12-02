@@ -112,8 +112,12 @@ end
 dap.listeners.before.event_exited["dapui_config"] = function()
   dapui.close()
 end
+
+
 local lspconfig = require('lspconfig')
 lspconfig.pyright.setup {}
+lspconfig.rust_analyzer.setup({})
+
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
