@@ -15,7 +15,7 @@ vim.opt.number=true             -- add line number
 vim.opt.relativenumber=true     -- and make them relative
 vim.opt.syntax="on"
 vim.opt.scrolloff=20            -- keep n lines above/below cursor (pad lines around cursor)
-
+vim.opt.termguicolors = true
 HOME = os.getenv("HOME")
 
 vim.g.mapleader = " "
