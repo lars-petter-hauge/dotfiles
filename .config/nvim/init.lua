@@ -87,6 +87,11 @@ require("lazy").setup({
     },
     { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap","mfussenegger/nvim-dap-python"}
     },
+    {"tpope/vim-surround"},
+    {"tpope/vim-repeat"},
+    {"tpope/vim-fugitive"},
+    {"airblade/vim-gitgutter"},
+    {"vim-airline/vim-airline"},
     {'folke/which-key.nvim'},
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
     {'flazz/vim-colorschemes'},
