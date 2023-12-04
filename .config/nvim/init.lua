@@ -20,6 +20,7 @@ HOME = os.getenv("HOME")
 
 vim.g.mapleader = " "
 vim.g.python3_host_prog = HOME .. "/.pyenv/versions/nvim_env/bin/python"
+vim.keymap.set("n","<c-_>",":nohlsearch<CR>")
 -- Navigate splits
 vim.keymap.set('n','<C-J>','<C-W><C-J>')
 vim.keymap.set('n','<C-K>','<C-W><C-K>')
