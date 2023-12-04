@@ -105,11 +105,33 @@ require("lazy").setup({
     {"vim-airline/vim-airline"},
     {'folke/which-key.nvim'},
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-    {'flazz/vim-colorschemes'},
   {'neovim/nvim-lspconfig'},
-  })
+    {
+  "folke/tokyonight.nvim",
+  lazy = false,
+  priority = 1000,
+  opts = {},
+}})
 
-vim.cmd([[colorscheme zenburn]])
+require("tokyonight").setup({
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  style = "night", --`storm`, `moon`, a darker variant `night` and `day`
+  light_style = "moon", -- The theme is used when the background is set to light
+  styles = {
+    -- Style to be applied to different syntax groups
+    -- Value is any valid attr-list value for `:help nvim_set_hl`
+    comments = { italic = true },
+    keywords = { italic = true },
+    functions = {},
+    variables = {},
+    -- Background styles. Can be "dark", "transparent" or "normal"
+    sidebars = "dark", -- style for sidebars, see below
+    floats = "dark", -- style for floating windows
+  },
+})
+vim.cmd[[colorscheme tokyonight]]
+
 
 require("ibl").setup()
 
