@@ -86,13 +86,16 @@ require("lazy").setup({
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
     { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap","mfussenegger/nvim-dap-python"}
-  },
-   {'folke/which-key.nvim'},
-  {'flazz/vim-colorschemes'},
+    },
+    {'folke/which-key.nvim'},
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+    {'flazz/vim-colorschemes'},
   {'neovim/nvim-lspconfig'},
   })
 
 vim.cmd([[colorscheme zenburn]])
+
+require("ibl").setup()
 
 require('dap-python').setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
 
