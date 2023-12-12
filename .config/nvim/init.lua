@@ -105,7 +105,14 @@ require("lazy").setup({
     {"vim-airline/vim-airline"},
     {'folke/which-key.nvim'},
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-  {'neovim/nvim-lspconfig'},
+  {'neovim/nvim-lspconfig', dependencies = {
+      -- Automatically install LSPs to stdpath for neovim
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
+
+      -- Additional lua configuration, makes nvim stuff amazing!
+      'folke/neodev.nvim',
+    }},
     {
   "folke/tokyonight.nvim",
   lazy = false,
@@ -186,3 +193,48 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'grn', vim.lsp.buf.rename, opts)
   end,
 })
+
+-- mason-lspconfig requires that these setup functions are called in this order
+-- before setting up the servers.
+require('mason').setup()
+require('mason-lspconfig').setup()
+
+-- Enable the following language servers
+--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+--
+local servers = {
+    pyright = {},
+    rust_analyzer = {},
+
+  lua_ls = {
+    Lua = {
+      workspace = { checkThirdParty = false },
+      telemetry = { enable = false },
+      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+      -- diagnostics = { disable = { 'missing-fields' } },
+    },
+  },
+}
+
+-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+-- Ensure the servers above are installed
+local mason_lspconfig = require 'mason-lspconfig'
+
+mason_lspconfig.setup {
+  ensure_installed = vim.tbl_keys(servers),
+}
+
+mason_lspconfig.setup_handlers {
+  function(server_name)
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name],
+      filetypes = (servers[server_name] or {}).filetypes,
+    }
+  end,
+}
+
