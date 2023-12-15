@@ -16,10 +16,8 @@ vim.opt.relativenumber=true     -- and make them relative
 vim.opt.syntax="on"
 vim.opt.scrolloff=20            -- keep n lines above/below cursor (pad lines around cursor)
 vim.opt.termguicolors = true
-HOME = os.getenv("HOME")
 
 vim.g.mapleader = " "
-vim.g.python3_host_prog = HOME .. "/.pyenv/versions/nvim_env/bin/python"
 vim.keymap.set("n","<c-_>",":nohlsearch<CR>")
 -- Navigate splits
 vim.keymap.set('n','<C-J>','<C-W><C-J>')
@@ -75,6 +73,7 @@ vim.keymap.set({'n','i','v'},'<leader>fd','<cmd>Telescope diagnostics<cr>')
 
 ------------ Plugins --------------
 
+-- Bootstrap lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -82,63 +81,64 @@ if not vim.loop.fs_stat(lazypath) then
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    "--branch=stable",
     lazypath,
   })
 end
 vim.opt.rtp:prepend(lazypath)
 
-
+-- Setup plugins
 require("lazy").setup({
     {"folke/which-key.nvim"},
-    {"nvim-treesitter/nvim-treesitter", ensure_installed={"python"}, build = ":TSUpdate"},
-    {'preservim/nerdtree'},
-    {'nvim-telescope/telescope.nvim', tag = '0.1.4',
-        dependencies = { 'nvim-lua/plenary.nvim' }
+    {"nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate"
     },
-    { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap","mfussenegger/nvim-dap-python"}
+    {'preservim/nerdtree'},
+    {'nvim-telescope/telescope.nvim',
+        tag = '0.1.4',
+        dependencies = {
+            'nvim-lua/plenary.nvim'
+        }
     },
     {"tpope/vim-surround"},
     {"tpope/vim-repeat"},
     {"tpope/vim-fugitive"},
-    {"airblade/vim-gitgutter"},
-    {"vim-airline/vim-airline"},
-    {'folke/which-key.nvim'},
-    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-  {'neovim/nvim-lspconfig', dependencies = {
-      -- Automatically install LSPs to stdpath for neovim
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-
-      -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
-    }},
-    {
-  "folke/tokyonight.nvim",
-  lazy = false,
-  priority = 1000,
-  opts = {},
-},
-{
-    -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
-
-      -- Adds LSP completion capabilities
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
+    {'mhinz/vim-signify'},
+    {"lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        opts = {}
     },
-  },
+    {"folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
+        opts = {},
+    },
+    {"petertriho/nvim-scrollbar"},
+    {"rcarriga/nvim-dap-ui",
+        dependencies = {
+            "mfussenegger/nvim-dap",
+            "mfussenegger/nvim-dap-python"
+        },
+    },
+    {'neovim/nvim-lspconfig',
+        dependencies = {
+            'williamboman/mason.nvim',
+            'williamboman/mason-lspconfig.nvim',
+            'folke/neodev.nvim',
+        }
+    },
+    {'hrsh7th/nvim-cmp',
+        dependencies = {
+            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-path',
+        },
+    },
 })
-
+------------ Colors and style --------------
 require("tokyonight").setup({
-  -- your configuration comes here
-  -- or leave it empty to use the default settings
-  style = "night", --`storm`, `moon`, a darker variant `night` and `day`
-  light_style = "moon", -- The theme is used when the background is set to light
+  style = "storm", --`storm`, `moon`, a darker variant `night` and `day`
   styles = {
     -- Style to be applied to different syntax groups
     -- Value is any valid attr-list value for `:help nvim_set_hl`
@@ -146,40 +146,30 @@ require("tokyonight").setup({
     keywords = { italic = true },
     functions = {},
     variables = {},
-    -- Background styles. Can be "dark", "transparent" or "normal"
-    sidebars = "dark", -- style for sidebars, see below
-    floats = "dark", -- style for floating windows
+    sidebars = "storm",
+    floats = "storm",
   },
 })
+
+local colors = require("tokyonight.colors").setup()
+require("scrollbar").setup({
+    handle = {
+        color = colors.bg_highlight,
+    },
+    marks = {
+        Search = { color = colors.orange },
+        Error = { color = colors.error },
+        Warn = { color = colors.warning },
+        Info = { color = colors.info },
+        Hint = { color = colors.hint },
+        Misc = { color = colors.purple },
+    }
+})
+
 vim.cmd[[colorscheme tokyonight]]
 
-
 require("ibl").setup()
-
-require('dap-python').setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
-
-table.insert(require('dap').configurations.python, {
-  type = 'python',
-  request = 'launch',
-  name = 'Debug file',
-  program = '${file}',
-})
-require("dapui").setup()
-local dap, dapui = require("dap"), require("dapui")
-dap.listeners.after.event_initialized["dapui_config"] = function()
-  dapui.open()
-end
-dap.listeners.before.event_terminated["dapui_config"] = function()
-  dapui.close()
-end
-dap.listeners.before.event_exited["dapui_config"] = function()
-  dapui.close()
-end
-
-
-local lspconfig = require('lspconfig')
-lspconfig.pyright.setup {}
-lspconfig.rust_analyzer.setup({})
+------------ Debug adapters --------------
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -208,14 +198,48 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+require('dap-python').setup()
+vim.keymap.set('n', '<F1>', function() require('dap').continue() end)
+vim.keymap.set('n', '<F2>', function() require('dap').step_over() end)
+vim.keymap.set('n', '<F3>', function() require('dap').step_into() end)
+vim.keymap.set('n', '<F4>', function() require('dap').step_out() end)
+vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
+vim.keymap.set('n', '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
+
+table.insert(require('dap').configurations.python, {
+  type = 'python',
+  request = 'launch',
+  name = 'Debug file',
+  program = '${file}',
+  console="integratedTerminal",
+})
+
+local dap, dapui = require("dap"), require("dapui")
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
+
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
 require('mason').setup()
 require('mason-lspconfig').setup()
 
+-- Now we can setup servers with lspconfig
+local lspconfig = require('lspconfig')
+lspconfig.pyright.setup({})
+lspconfig.rust_analyzer.setup({})
+
+
 -- Enable the following language servers
---  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
+-- Any servers added here will be automatically installed - see docs for which ones are available
 local servers = {
     pyright = {},
     rust_analyzer = {},
@@ -225,7 +249,7 @@ local servers = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
       -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      -- diagnostics = { disable = { 'missing-fields' } },
+      diagnostics = { disable = { 'missing-fields' } },
     },
   },
 }
