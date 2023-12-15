@@ -16,6 +16,7 @@ vim.opt.relativenumber=true     -- and make them relative
 vim.opt.syntax="on"
 vim.opt.scrolloff=20            -- keep n lines above/below cursor (pad lines around cursor)
 vim.opt.termguicolors = true
+vim.opt.hidden=true             -- Allow to have multiple buffers open without saving
 
 vim.g.mapleader = " "
 vim.keymap.set("n","<c-_>",":nohlsearch<CR>")
