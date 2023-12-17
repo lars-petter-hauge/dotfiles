@@ -17,7 +17,8 @@ vim.opt.syntax="on"
 vim.opt.scrolloff=20            -- keep n lines above/below cursor (pad lines around cursor)
 vim.opt.termguicolors = true
 vim.opt.hidden=true             -- Allow to have multiple buffers open without saving
-
+HOME = os.getenv("HOME")
+vim.g.python3_host_prog = HOME .. "/.pyenv/versions/nvim_env/bin/python"
 vim.g.mapleader = " "
 vim.keymap.set("n","<c-_>",":nohlsearch<CR>")
 -- Navigate splits
@@ -179,6 +180,7 @@ require("nvim-treesitter.configs").setup({
     }
 })
     ------------ Debug adapters --------------
+require('dap-python').setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
