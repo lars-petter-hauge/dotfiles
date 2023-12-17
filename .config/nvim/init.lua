@@ -169,8 +169,16 @@ require("scrollbar").setup({
 vim.cmd[[colorscheme tokyonight]]
 
 require("ibl").setup()
------------- Debug adapters --------------
 
+------------ Syntax highlighting --------------
+require("nvim-treesitter.configs").setup({
+    ensure_installed = { "c", "lua", "vim", "vimdoc", "query","python","rust" },
+    auto_install = true,
+    highlight = {
+        enable = true
+    }
+})
+    ------------ Debug adapters --------------
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
