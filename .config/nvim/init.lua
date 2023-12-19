@@ -205,6 +205,18 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
     vim.keymap.set('n', 'grn', vim.lsp.buf.rename, opts)
+
+    -- lsp_workspace_symbols gives an error with pyright (empty query) and urges
+    -- the user to provide a text input. It is possible to use lsp_dynamic_workspace_symbols
+    -- instead, but that includes a fairly large result. Also a search is performed
+    -- per character, hence it is quite slow for larger projects. Here we prompt with something
+    -- for the user to start with
+    -- keymapping to fit with other telescope search
+    vim.keymap.set("n", "<leader>fs", function()
+            vim.ui.input({ prompt = "Workspace symbols: " }, function(query)
+                    require("telescope.builtin").lsp_workspace_symbols({ query = query })
+            end, opts)
+    end, { desc = "LSP workspace symbols" })
   end,
 })
 
