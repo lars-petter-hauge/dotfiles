@@ -10,10 +10,12 @@ unsetopt autopushd
 
 PROMPT='%(?.%F{green}√.%F{red}?%?)%f %B%F{240}%1~%f%b %# '
 
-export PIPENV_PYTHON="$HOME/.pyenv/shims/python"
 
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+
 
 # Source additional files; alias
 if [ -f $HOME/.alias ]; then source $HOME/.alias; fi
