@@ -2,6 +2,7 @@
 alias cd..="cd .."
 alias ls="ls --color=auto"
 alias ll="ls -l --color=auto"
+alias l.="ls -d .* --color=auto"
 
 # General
 alias tree="tree -C"
