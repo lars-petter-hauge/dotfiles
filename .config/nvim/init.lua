@@ -150,6 +150,14 @@ require("tokyonight").setup({
     sidebars = "storm",
     floats = "storm",
   },
+  on_highlights = function(hl, colors)
+    hl.LineNr = {
+      fg = colors.yellow
+    }
+    hl.CursorLine = {
+      bg = colors.bg_dark
+    }
+  end
 })
 
 local colors = require("tokyonight.colors").setup()
