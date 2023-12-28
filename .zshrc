@@ -14,7 +14,11 @@ PROMPT='%(?.%F{green}√.%F{red}?%?)%f %B%F{240}%1~%f%b %# '
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# Leaving the setting here uncommented purposefully, as pyenv includes by default
+# The virtualenenv-init facilitates pyenv to change venv on directory change
+# looking for a python.version file. It is however fairly slow, and does so on
+# every command line call.
+# eval "$(pyenv virtualenv-init -)"
 
 
 # Source additional files; alias
