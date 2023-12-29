@@ -99,7 +99,8 @@ require("lazy").setup({
     {'nvim-telescope/telescope.nvim',
         tag = '0.1.4',
         dependencies = {
-            'nvim-lua/plenary.nvim'
+            'nvim-lua/plenary.nvim',
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         }
     },
     {"tpope/vim-surround"},
