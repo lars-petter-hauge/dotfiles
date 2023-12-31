@@ -9,7 +9,7 @@ vim.opt.softtabstop=4           -- see multiple spaces as tabstops so <BS> does 
 vim.opt.encoding="utf-8"
 vim.opt.cursorline=true         -- highlight current cursorline
 vim.opt.clipboard="unnamedplus" -- access clipboard outside of vim
-vim.opt.mouse=n
+vim.opt.mouse=a
 vim.opt.laststatus=2
 vim.opt.number=true             -- add line number
 vim.opt.relativenumber=true     -- and make them relative
@@ -17,10 +17,14 @@ vim.opt.syntax="on"
 vim.opt.scrolloff=20            -- keep n lines above/below cursor (pad lines around cursor)
 vim.opt.termguicolors = true
 vim.opt.hidden=true             -- Allow to have multiple buffers open without saving
+
 HOME = os.getenv("HOME")
 vim.g.python3_host_prog = HOME .. "/.pyenv/versions/nvim_env/bin/python"
+
 vim.g.mapleader = " "
+
 vim.keymap.set("n","<c-_>",":nohlsearch<CR>")
+
 -- Navigate splits
 vim.keymap.set('n','<C-J>','<C-W><C-J>')
 vim.keymap.set('n','<C-K>','<C-W><C-K>')
