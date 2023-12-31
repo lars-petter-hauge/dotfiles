@@ -1,4 +1,4 @@
-
+local vim = vim                 -- Simply to silent warning of undefined global
 vim.opt.expandtab=true          -- converts tabs to white space
 vim.opt.shiftwidth=4            -- width for autoindents
 vim.opt.autoindent=true         -- indent a new line the same amount as the line just typed
