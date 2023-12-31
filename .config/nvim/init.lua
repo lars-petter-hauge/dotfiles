@@ -243,7 +243,7 @@ require('mason-lspconfig').setup()
 local lspconfig = require('lspconfig')
 lspconfig.pyright.setup({})
 lspconfig.rust_analyzer.setup({})
-
+lspconfig.lua_ls.setup({})
 
 -- Enable the following language servers
 -- Any servers added here will be automatically installed - see docs for which ones are available
