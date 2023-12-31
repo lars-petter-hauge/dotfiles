@@ -16,8 +16,7 @@ export LC_CTYPE=en_US.UTF-8
 
 unsetopt autopushd
 
-PROMPT='%(?.%F{green}√.%F{red}?%?)%f %B%F{240}%1~%f%b %# '
-
+autoload -Uz compinit && compinit
 
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
