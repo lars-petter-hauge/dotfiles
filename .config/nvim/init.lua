@@ -43,6 +43,11 @@ vim.keymap.set('i','<A-k>', '<Esc>:m .-2<CR>==gi')
 vim.keymap.set('v','<A-j>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v','<A-k>', ":m '<-2<CR>gv=gv")
 
+-- vim.diagnostic result may come from several different sources
+-- such as linters, lsp etc.
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+
 vim.api.nvim_create_augroup("AutoFormat", {})
 
 vim.api.nvim_create_autocmd(
@@ -192,12 +197,8 @@ require("nvim-treesitter.configs").setup({
         enable = true
     }
 })
-    ------------ Debug adapters --------------
-require('dap-python').setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
--- Global mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+
+------------ Language Server Protocol --------------
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
@@ -232,35 +233,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end, { desc = "LSP workspace symbols" })
   end,
 })
-
-require('dap-python').setup()
-vim.keymap.set('n', '<F1>', function() require('dap').continue() end)
-vim.keymap.set('n', '<F2>', function() require('dap').step_over() end)
-vim.keymap.set('n', '<F3>', function() require('dap').step_into() end)
-vim.keymap.set('n', '<F4>', function() require('dap').step_out() end)
-vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
-vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
-vim.keymap.set('n', '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
-vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
-
-table.insert(require('dap').configurations.python, {
-  type = 'python',
-  request = 'launch',
-  name = 'Debug file',
-  program = '${file}',
-  console="integratedTerminal",
-})
-require("dapui").setup()
-local dap, dapui = require("dap"), require("dapui")
-dap.listeners.after.event_initialized["dapui_config"] = function()
-  dapui.open()
-end
-dap.listeners.before.event_terminated["dapui_config"] = function()
-  dapui.close()
-end
-dap.listeners.before.event_exited["dapui_config"] = function()
-  dapui.close()
-end
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
@@ -311,7 +283,7 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
--- [[ Configure nvim-cmp ]]
+------------ completion (nvim-cmp) --------------
 -- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
@@ -362,3 +334,34 @@ cmp.setup {
     { name = 'path' },
   },
 }
+
+------------ Debug adapters --------------
+require('dap-python').setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
+
+vim.keymap.set('n', '<F1>', function() require('dap').continue() end)
+vim.keymap.set('n', '<F2>', function() require('dap').step_over() end)
+vim.keymap.set('n', '<F3>', function() require('dap').step_into() end)
+vim.keymap.set('n', '<F4>', function() require('dap').step_out() end)
+vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
+vim.keymap.set('n', '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
+
+table.insert(require('dap').configurations.python, {
+  type = 'python',
+  request = 'launch',
+  name = 'Debug file',
+  program = '${file}',
+  console="integratedTerminal",
+})
+require("dapui").setup()
+local dap, dapui = require("dap"), require("dapui")
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
