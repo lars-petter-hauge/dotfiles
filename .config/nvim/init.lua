@@ -115,6 +115,7 @@ require("lazy").setup({
     {"tpope/vim-surround"},
     {"tpope/vim-repeat"},
     {"tpope/vim-fugitive"},
+    {"tpope/vim-commentary"},
     {'mhinz/vim-signify'},
     {"lukas-reineke/indent-blankline.nvim",
         main = "ibl",
