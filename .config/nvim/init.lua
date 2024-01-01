@@ -260,12 +260,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 require('mason').setup()
 require('mason-lspconfig').setup()
 
--- Now we can setup servers with lspconfig
-local lspconfig = require('lspconfig')
-lspconfig.pyright.setup({})
-lspconfig.rust_analyzer.setup({})
-lspconfig.lua_ls.setup({})
-
 -- Enable the following language servers
 -- Any servers added here will be automatically installed - see docs for which ones are available
 local servers = {
@@ -287,7 +281,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
-local mason_lspconfig = require 'mason-lspconfig'
+local mason_lspconfig = require('mason-lspconfig')
 
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
@@ -306,8 +300,8 @@ mason_lspconfig.setup_handlers {
 
 ------------ completion (nvim-cmp) --------------
 -- See `:help cmp`
-local cmp = require 'cmp'
-local luasnip = require 'luasnip'
+local cmp = require('cmp')
+local luasnip = require('luasnip')
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
