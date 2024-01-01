@@ -265,15 +265,7 @@ require('mason-lspconfig').setup()
 local servers = {
     pyright = {},
     rust_analyzer = {},
-
-  lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      diagnostics = { disable = { 'missing-fields' } },
-    },
-  },
+    lua_ls = {}
 }
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
