@@ -199,6 +199,20 @@ require("nvim-treesitter.configs").setup({
     }
 })
 
+require("telescope").setup {
+  defaults = {
+    theme = "center",
+    sorting_strategy = "ascending",
+    layout_config = {
+      horizontal = {
+        prompt_position = "top",
+        preview_width = 0.3,
+      },
+    },
+  },
+}
+
+
 ------------ Language Server Protocol --------------
 
 -- Use LspAttach autocommand to only map the following keys
