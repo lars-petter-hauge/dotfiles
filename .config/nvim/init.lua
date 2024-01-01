@@ -81,6 +81,8 @@ vim.keymap.set('n','<leader>fg','<cmd>Telescope live_grep<cr>')
 vim.keymap.set('n','<leader>fb','<cmd>Telescope buffers<cr>')
 vim.keymap.set('n','<leader>fh','<cmd>Telescope help_tags<cr>')
 vim.keymap.set('n','<leader>fd','<cmd>Telescope diagnostics<cr>')
+vim.keymap.set("n","<leader>ft", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { noremap = true })
+
 ------------ Plugins --------------
 
 -- Bootstrap lazy
@@ -110,6 +112,9 @@ require("lazy").setup({
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         }
+    },
+    {"nvim-telescope/telescope-file-browser.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim"}
     },
     {"tpope/vim-surround"},
     {"tpope/vim-repeat"},
@@ -210,6 +215,8 @@ require("telescope").setup {
     },
   },
 }
+
+require("telescope").load_extension "file_browser"
 
 
 ------------ Language Server Protocol --------------
