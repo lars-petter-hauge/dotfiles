@@ -261,7 +261,9 @@ require('mason').setup()
 require('mason-lspconfig').setup()
 
 -- Enable the following language servers
--- Any servers added here will be automatically installed - see docs for which ones are available
+-- Any servers added here will be automatically installed
+-- Any additional server settings can be included and will be forwarded
+-- to the server setup
 local servers = {
     pyright = {},
     rust_analyzer = {},
@@ -272,12 +274,10 @@ local servers = {
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
--- Ensure the servers above are installed
 local mason_lspconfig = require('mason-lspconfig')
 
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
+-- Automatically install any servers setup with lspconfig
+mason_lspconfig.setup({automatic_installation=true})
 
 mason_lspconfig.setup_handlers {
   function(server_name)
