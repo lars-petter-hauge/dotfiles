@@ -73,15 +73,14 @@ vim.api.nvim_create_autocmd(
     }
 )
 ----------- Plugin bindings -----------
-vim.keymap.set({'n','i','v'},'<C-n>', ':NERDTreeToggle<CR>')
+vim.keymap.set("n",'<C-n>', ':NERDTreeToggle<CR>')
 
 
-vim.keymap.set({'n','i','v'},'<leader>ff','<cmd>Telescope find_files<cr>')
-vim.keymap.set({'n','i','v'},'<leader>fg','<cmd>Telescope live_grep<cr>')
-vim.keymap.set({'n','i','v'},'<leader>fb','<cmd>Telescope buffers<cr>')
-vim.keymap.set({'n','i','v'},'<leader>fh','<cmd>Telescope help_tags<cr>')
-vim.keymap.set({'n','i','v'},'<leader>fd','<cmd>Telescope diagnostics<cr>')
-
+vim.keymap.set('n','<leader>ff','<cmd>Telescope find_files<cr>')
+vim.keymap.set('n','<leader>fg','<cmd>Telescope live_grep<cr>')
+vim.keymap.set('n','<leader>fb','<cmd>Telescope buffers<cr>')
+vim.keymap.set('n','<leader>fh','<cmd>Telescope help_tags<cr>')
+vim.keymap.set('n','<leader>fd','<cmd>Telescope diagnostics<cr>')
 ------------ Plugins --------------
 
 -- Bootstrap lazy
