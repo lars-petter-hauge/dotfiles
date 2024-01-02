@@ -28,10 +28,13 @@ eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
 
 
-# Source additional files; alias
-if [ -f $HOME/.alias ]; then source $HOME/.alias; fi
-
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+
+# Source additional files; alias, post-rc
+if [ -f $HOME/.alias ]; then source $HOME/.alias; fi
+
+if [ -f $HOME/.post-rc ]; then source $HOME/.post-rc; fi
