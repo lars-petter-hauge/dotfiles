@@ -3,7 +3,7 @@
 olddir=${HOME}/dotfiles_old
 mkdir -p $olddir
 
-files=".alias .zshrc .p10k.zsh .tmux.conf .vimrc .config/nvim/init.lua"
+files=".alias .zshrc .p10k.zsh .tmux.conf .vimrc .config/nvim/init.lua .config/nvim/lua"
 
 
 for file in $files; do
