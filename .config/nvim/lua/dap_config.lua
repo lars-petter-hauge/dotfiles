@@ -2,26 +2,30 @@
 
 local vim = vim
 ------------ Debug adapters --------------
-require('dap-python').setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
+local dap, dapui, dap_python = require("dap"), require("dapui"), require("dap-python")
 
-vim.keymap.set('n', '<F1>', function() require('dap').continue() end)
-vim.keymap.set('n', '<F2>', function() require('dap').step_over() end)
-vim.keymap.set('n', '<F3>', function() require('dap').step_into() end)
-vim.keymap.set('n', '<F4>', function() require('dap').step_out() end)
-vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
-vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
-vim.keymap.set('n', '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
-vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
+dap_python.setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
+dap_python.test_runner = "pytest"
 
-table.insert(require('dap').configurations.python, {
+vim.keymap.set('n', '<F1>', function() dap.continue() end)
+vim.keymap.set('n', '<F2>', function() dap.step_over() end)
+vim.keymap.set('n', '<F3>', function() dap.step_into() end)
+vim.keymap.set('n', '<F4>', function() dap.step_out() end)
+vim.keymap.set('n', '<Leader>db', function() dap.toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>dB', function() dap.set_breakpoint() end)
+vim.keymap.set('n', '<Leader>dr', function() dap.repl.open() end)
+vim.keymap.set('n', '<Leader>dt', function() dap_python.test_method() end)
+
+table.insert(dap.configurations.python, {
   type = 'python',
   request = 'launch',
   name = 'Debug file',
   program = '${file}',
   console="integratedTerminal",
 })
-require("dapui").setup()
-local dap, dapui = require("dap"), require("dapui")
+
+dapui.setup()
+
 dap.listeners.after.event_initialized["dapui_config"] = function()
   dapui.open()
 end
