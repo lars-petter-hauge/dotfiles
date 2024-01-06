@@ -26,12 +26,18 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 
 ----------- Plugin bindings -----------
 vim.keymap.set("n",'<C-n>', ':NERDTreeToggle<CR>')
+local wk = require("which-key")
 
-
-vim.keymap.set('n','<leader>ff','<cmd>Telescope find_files<cr>')
-vim.keymap.set('n','<leader>fg','<cmd>Telescope live_grep<cr>')
-vim.keymap.set('n','<leader>fb','<cmd>Telescope buffers<cr>')
-vim.keymap.set('n','<leader>fh','<cmd>Telescope help_tags<cr>')
-vim.keymap.set('n','<leader>fd','<cmd>Telescope diagnostics<cr>')
-vim.keymap.set("n","<leader>ft", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { noremap = true })
+wk.register({
+  ["<leader>f"] = {
+    name = "Telescope operations",
+    f = { "<cmd>Telescope find_files<cr>", "Find File" },
+    r = { "<cmd>Telescope oldfiles<cr>", "Open Recent File" },
+    b = { '<cmd>Telescope buffers<cr>', "Open Buffers" },
+    h = { "<cmd>Telescope help_tags<cr>", "Help Tags" },
+    g = { "<cmd>Telescope live_grep<cr>", "Live Grep" },
+    d = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
+    t = { "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", "File Browser" },
+  },
+})
 

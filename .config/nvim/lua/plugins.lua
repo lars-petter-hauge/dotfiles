@@ -18,7 +18,12 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Setup plugins
 require("lazy").setup({
-    {"folke/which-key.nvim"},
+    {"folke/which-key.nvim",
+    event="VeryLazy",
+    init = function()
+    vim.o.timeout = true
+    vim.o.timeoutlen = 300
+  end,},
     {"nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate"
     },
