@@ -23,12 +23,13 @@ wk.register({
 })
 
 
-table.insert(dap.configurations.python, {
+table.insert(dap.configurations.python, 1, {
+  name = 'Debug file',
   type = 'python',
   request = 'launch',
-  name = 'Debug file',
   program = '${file}',
   console="integratedTerminal",
+  justMyCode = false,
 })
 
 dapui.setup()
