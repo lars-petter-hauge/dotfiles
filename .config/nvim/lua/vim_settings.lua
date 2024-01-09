@@ -22,3 +22,16 @@ vim.opt.hidden=true             -- Allow to have multiple buffers open without s
 vim.g.python3_host_prog = HOME .. "/.pyenv/versions/nvim_env/bin/python"
 
 vim.g.mapleader = " "
+
+local config = {
+  -- Enable virtual text
+  virtual_text = true,
+  underline = true,
+  float = {
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+  },
+}
+
+vim.diagnostic.config(config)

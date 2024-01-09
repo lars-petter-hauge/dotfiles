@@ -1,4 +1,6 @@
 local vim = vim
+
+-- "unset" search highlight
 vim.keymap.set("n","<c-_>",":nohlsearch<CR>")
 
 -- Navigate splits
@@ -19,11 +21,6 @@ vim.keymap.set('i','<A-k>', '<Esc>:m .-2<CR>==gi')
 vim.keymap.set('v','<A-j>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v','<A-k>', ":m '<-2<CR>gv=gv")
 
--- vim.diagnostic result may come from several different sources
--- such as linters, lsp etc.
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-
 ----------- Plugin bindings -----------
 vim.keymap.set("n",'<C-n>', ':NERDTreeToggle<CR>')
 local wk = require("which-key")
@@ -39,5 +36,11 @@ wk.register({
     d = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
     t = { "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", "File Browser" },
   },
+  ["<leader>i"] = {
+    name = "Info Diagnostics",
+    o = { ":lua vim.diagnostic.open_float()<cr>", "Open diagnostic window"},
+    k = { ":lua vim.diagnostic.goto_prev()<cr>", "Next diagnostic"},
+    j = { ":lua vim.diagnostic.goto_next()<cr>", "Previous diagnostic"}
+  }
 })
 
