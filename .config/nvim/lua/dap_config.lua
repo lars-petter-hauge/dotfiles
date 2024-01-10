@@ -1,10 +1,21 @@
-
+local vim = vim
 ------------ Debug adapters --------------
 local dap, dapui, dap_python = require("dap"), require("dapui"), require("dap-python")
 
 dap_python.setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
 dap_python.test_runner = "pytest"
 local wk = require("which-key")
+
+local function open_floating()
+    -- Prompts user to select one of the elements in dapui to open as a floating
+    -- element. Size will be the same as the current window in focus
+    local height = vim.api.nvim_win_get_height(0)
+    local width = vim.api.nvim_win_get_width(0)
+    -- float_element should prompt user if window id, first argument is not passed.
+    -- however nothing appears if one doesn't give _anything_ at all. Hence a dummy
+    -- _ value is provided
+    dapui.float_element(_ ,{height = height, width = width, position='center', enter=true})
+end
 
 wk.register({
   ["<leader>d"] = {
@@ -19,6 +30,7 @@ wk.register({
     b = {function() dap.toggle_breakpoint() end, "Set Breakpoint"},
     r = {function() dap.repl.open() end, "Open Repl"},
     t = {function() dap_python.test_method() end, "Debug Test Method (at cursor)"},
+    p = {open_floating, "Pop out window"},
   },
 })
 
