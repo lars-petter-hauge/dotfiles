@@ -16,6 +16,7 @@
   [[ $ZSH_VERSION == (5.<1->*|<6->.*) ]] || return
 
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+    pyenv                   # python environment (https://github.com/pyenv/pyenv)
     dir                     # current directory
     vcs                     # git status
     prompt_char             # prompt symbol
@@ -25,8 +26,6 @@
     status                  # exit code of the last command
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
-    virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
-    pyenv                   # python environment (https://github.com/pyenv/pyenv)
   )
 
   # Defines character set used by powerlevel10k. It's best to let `p10k configure` set it for you.
