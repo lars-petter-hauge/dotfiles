@@ -2,8 +2,10 @@ local vim = vim
 ------------ Debug adapters --------------
 local dap, dapui, dap_python = require("dap"), require("dapui"), require("dap-python")
 
+-- Expect that debugpy was installed (Is set to autoinstall through Mason)
 dap_python.setup(HOME .."/.pyenv/versions/nvim_env/bin/python")
 dap_python.test_runner = "pytest"
+
 local wk = require("which-key")
 
 local function open_floating()
@@ -34,7 +36,6 @@ wk.register({
   },
 })
 
-
 table.insert(dap.configurations.python, 1, {
   name = 'Debug file',
   type = 'python',
@@ -43,6 +44,27 @@ table.insert(dap.configurations.python, 1, {
   console="integratedTerminal",
   justMyCode = false,
 })
+
+-- Expect that the cpptools server was installed with Mason
+local debug_loc = vim.fn.stdpath('data') .. "/mason/bin/OpenDebugAD7"
+
+dap.adapters.cppdbg = {
+  id = 'cppdbg',
+  type = 'executable',
+  command = debug_loc,
+}
+
+dap.configurations.cpp = {{
+  name = 'Debug file',
+  type = 'cppdbg',
+  request = 'launch',
+  program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+  console="integratedTerminal",
+  justMyCode = false,
+  cwd = '${workspaceFolder}',
+}}
 
 dapui.setup()
 
