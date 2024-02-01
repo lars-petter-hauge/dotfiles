@@ -13,15 +13,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- Buffer local mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
-    local opts = { buffer = ev.buf }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', 'grn', vim.lsp.buf.rename, opts)
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = ev.buf, desc="Declaration"} )
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc="Definition"} )
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { buffer = ev.buf, desc="Implementation"})
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = ev.buf, desc="References"})
+    vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc="Type definition"})
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = ev.buf, desc="Hover Definition"})
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = ev.buf, desc="Signature help"})
+    vim.keymap.set('n', 'grn', vim.lsp.buf.rename, { buffer = ev.buf, desc="Rename"})
 
     -- lsp_workspace_symbols gives an error with pyright (empty query) and urges
     -- the user to provide a text input. It is possible to use lsp_dynamic_workspace_symbols
@@ -32,7 +31,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set("n", "<leader>fs", function()
             vim.ui.input({ prompt = "Workspace symbols: " }, function(query)
                     require("telescope.builtin").lsp_workspace_symbols({ query = query })
-            end, opts)
+            end, { buffer = ev.buf})
     end, { desc = "LSP workspace symbols" })
   end,
 })
