@@ -47,10 +47,11 @@ require('mason-lspconfig').setup()
 -- to the server setup
 local servers = {
     cpptools = {},
-    pyright = {},
-    rust_analyzer = {},
-    lua_ls = {},
     clangd = {},
+    codelldb = {},
+    pyright = {},
+    debugpy = {},
+    lua_ls = {},
 }
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers

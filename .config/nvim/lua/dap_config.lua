@@ -46,12 +46,12 @@ table.insert(dap.configurations.python, 1, {
 })
 
 -- Expect that the cpptools server was installed with Mason
-local debug_loc = vim.fn.stdpath('data') .. "/mason/bin/OpenDebugAD7"
+local debug_loc = vim.fn.stdpath('data') .. "/mason/bin/"
 
 dap.adapters.cppdbg = {
   id = 'cppdbg',
   type = 'executable',
-  command = debug_loc,
+  command = debug_loc .. "OpenDebugAD7",
 }
 
 dap.configurations.cpp = {{
@@ -66,6 +66,29 @@ dap.configurations.cpp = {{
   cwd = '${workspaceFolder}',
 }}
 
+dap.adapters.lldb = {
+  type = "server",
+  port = "${port}",
+  host = "127.0.0.1",
+  executable = {
+    command = debug_loc.."codelldb",
+    args = { "--port", "${port}" },
+  },
+}
+
+dap.configurations.rust = {
+    {
+        name = "Debug File",
+        type = "lldb",
+        request = "launch",
+        program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+        end,
+        showDisassembly = "never",
+        stopOnEntry = false,
+        cwd = "${workspaceFolder}",
+    }
+}
 dapui.setup()
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
