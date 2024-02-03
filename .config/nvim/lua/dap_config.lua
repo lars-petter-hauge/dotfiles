@@ -37,7 +37,6 @@ wk.register({
     d = {function() dap.down() end, "Step Down (Stack) (F6)"},
     u = {function() dap.up() end, "Step Up (Stack) (F7)"},
     b = {function() dap.toggle_breakpoint() end, "Set Breakpoint"},
-    r = {function() dap.repl.open() end, "Open Repl"},
     t = {function() dap_python.test_method() end, "Debug Test Method (at cursor)"},
     p = {open_floating, "Pop out window"},
     h = {toggle_sidelayout, "Toggle sidebar"},
