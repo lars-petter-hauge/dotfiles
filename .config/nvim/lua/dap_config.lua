@@ -22,19 +22,27 @@ end
 wk.register({
   ["<leader>d"] = {
     name = "Debug Operations",
-    c = {function() dap.continue() end, "Continue"},
-    s = {function() dap.step_over() end, "Step Over"},
-    i = {function() dap.step_into() end, "Step Into"},
-    u = {function() dap.up() end, "Step Up (Stack)"},
-    d = {function() dap.down() end, "Step Down (Stack)"},
-    o = {function() dap.step_out() end, "Step Out"},
-    e = {function() dap.terminate() end, "End"},
+    c = {function() dap.continue() end, "Continue (F5)"},
+    s = {function() dap.step_over() end, "Step Over (F1)"},
+    i = {function() dap.step_into() end, "Step Into (F2)"},
+    o = {function() dap.step_out() end, "Step Out (F3)"},
+    e = {function() dap.terminate() end, "End (F4)"},
+    d = {function() dap.down() end, "Step Down (Stack) (F6)"},
+    u = {function() dap.up() end, "Step Up (Stack) (F7)"},
     b = {function() dap.toggle_breakpoint() end, "Set Breakpoint"},
     r = {function() dap.repl.open() end, "Open Repl"},
     t = {function() dap_python.test_method() end, "Debug Test Method (at cursor)"},
     p = {open_floating, "Pop out window"},
   },
 })
+-- Also map to function keys
+vim.keymap.set('n', '<F5>', function() dap.continue() end, {desc="Continue"})
+vim.keymap.set('n', '<F1>', function() dap.step_over() end, {desc="Step Over"})
+vim.keymap.set('n', '<F2>', function() dap.step_into() end, {desc="Step Into"})
+vim.keymap.set('n', '<F3>', function() dap.step_out() end, {desc="Step Out"})
+vim.keymap.set('n', '<F4>', function() dap.terminate() end, {desc="End"})
+vim.keymap.set('n', '<F6>', function() dap.down() end, {desc="Step Down (Stack)"})
+vim.keymap.set('n', '<F7>', function() dap.up() end, {desc="Step Up (Stack)"})
 
 table.insert(dap.configurations.python, 1, {
   name = 'Debug file',
