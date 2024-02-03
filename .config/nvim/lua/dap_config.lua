@@ -19,6 +19,13 @@ local function open_floating()
     dapui.float_element(_ ,{height = height, width = width, position='center', enter=true})
 end
 
+local function toggle_sidelayout()
+    -- Toggles between two sidebar layouts, one with some elements, other with all
+    -- Layouts are defined further down
+    dapui.toggle({layout=1})
+    dapui.toggle({layout=2})
+end
+
 wk.register({
   ["<leader>d"] = {
     name = "Debug Operations",
@@ -33,6 +40,7 @@ wk.register({
     r = {function() dap.repl.open() end, "Open Repl"},
     t = {function() dap_python.test_method() end, "Debug Test Method (at cursor)"},
     p = {open_floating, "Pop out window"},
+    h = {toggle_sidelayout, "Toggle sidebar"},
   },
 })
 -- Also map to function keys
@@ -97,10 +105,53 @@ dap.configurations.rust = {
         cwd = "${workspaceFolder}",
     }
 }
-dapui.setup()
+
+-- The order of the layouts matters. If the layouts that cover bottom is defined first
+-- they will cover the entire bottom. Therefore we define sidebar first, as we want the entire
+-- vertical sidebar to be filled with elements, and the bottom layout should only be below
+-- main window
+local layouts = {
+    {
+        elements = { {
+            id = "stacks",
+            size = 0.25
+          },{
+            id = "scopes",
+            size = 0.75
+          } },
+        position = "left",
+        size = 40
+    },
+    {
+        elements = { {
+            id = "stacks",
+            size = 0.25
+          }, {
+            id = "breakpoints",
+            size = 0.25
+          }, {
+            id = "watches",
+            size = 0.25
+          }, {
+            id = "scopes",
+            size = 0.25
+          } },
+        position = "left",
+        size = 40
+    },
+    {
+        elements = { "repl", "console"},
+        size = 15,
+        position = "bottom",
+    },
+}
+
+
+dapui.setup({layouts=layouts})
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
-  dapui.open()
+  dapui.open({layout=1})
+  dapui.open({layout=3})
 end
 dap.listeners.before.event_terminated["dapui_config"] = function()
   dapui.close()
