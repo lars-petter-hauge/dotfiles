@@ -51,6 +51,17 @@ vim.keymap.set('n', '<F4>', function() dap.terminate() end, {desc="End"})
 vim.keymap.set('n', '<F6>', function() dap.down() end, {desc="Step Down (Stack)"})
 vim.keymap.set('n', '<F7>', function() dap.up() end, {desc="Step Up (Stack)"})
 
+wk.register({
+  ["<leader>da"] = {
+    name = "Exception Handling",
+    n = {function() dap.set_exception_breakpoints({}) end, "Set no exception catching"},
+    d = {function() dap.set_exception_breakpoints({'default'}) end, "Set Default exception catching"},
+    r = {function() dap.set_exception_breakpoints({'raised'}) end, "Set Raised exception catching"},
+    u = {function() dap.set_exception_breakpoints({'uncaught'}) end, "Set Uncaught exception catching"},
+    U = {function() dap.set_exception_breakpoints({'unhandled'}) end, "Set Unhandled exception catching"},
+ },
+})
+
 table.insert(dap.configurations.python, 1, {
   name = 'Debug file',
   type = 'python',
