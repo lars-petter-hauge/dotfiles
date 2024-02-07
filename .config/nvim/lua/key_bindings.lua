@@ -25,22 +25,25 @@ vim.keymap.set('v','<A-k>', ":m '<-2<CR>gv=gv")
 vim.keymap.set("n",'<C-n>', ':NERDTreeToggle<CR>')
 local wk = require("which-key")
 
+local ts_builtin = require('telescope.builtin')
+local ts_fb = require "telescope".extensions.file_browser
+
 wk.register({
   ["<leader>f"] = {
     name = "Telescope operations",
-    f = { "<cmd>Telescope find_files<cr>", "Find File" },
-    r = { "<cmd>Telescope oldfiles<cr>", "Open Recent File" },
-    b = { '<cmd>Telescope buffers<cr>', "Open Buffers" },
-    h = { "<cmd>Telescope help_tags<cr>", "Help Tags" },
-    g = { "<cmd>Telescope live_grep<cr>", "Live Grep" },
-    d = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
-    t = { "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", "File Browser" },
+    f = { function() ts_builtin.find_files() end, "Find File" },
+    r = { function() ts_builtin.oldfiles() end, "Open Recent File" },
+    b = { function() ts_builtin.buffers() end, "Open Buffers" },
+    h = { function() ts_builtin.help_tags() end, "Help Tags" },
+    g = { function() ts_builtin.live_grep() end, "Live Grep" },
+    d = { function() ts_builtin.diagnostics() end, "Diagnostics" },
+    t = { function() ts_fb.file_browser() end, "File Browser" },
   },
   ["<leader>i"] = {
     name = "Info Diagnostics",
-    o = { ":lua vim.diagnostic.open_float()<cr>", "Open diagnostic window"},
-    k = { ":lua vim.diagnostic.goto_prev()<cr>", "Next diagnostic"},
-    j = { ":lua vim.diagnostic.goto_next()<cr>", "Previous diagnostic"}
+    o = { function() vim.diagnostic.open_float() end, "Open diagnostic window"},
+    k = { function() vim.diagnostic.goto_prev() end, "Next diagnostic"},
+    j = { function() vim.diagnostic.goto_next() end, "Previous diagnostic"}
   }
 })
 
