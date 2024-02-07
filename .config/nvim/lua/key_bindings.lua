@@ -22,7 +22,6 @@ vim.keymap.set('v','<A-j>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v','<A-k>', ":m '<-2<CR>gv=gv")
 
 ----------- Plugin bindings -----------
-vim.keymap.set("n",'<C-n>', ':NERDTreeToggle<CR>')
 local wk = require("which-key")
 
 local ts_builtin = require('telescope.builtin')

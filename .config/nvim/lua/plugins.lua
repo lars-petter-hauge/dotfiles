@@ -27,7 +27,6 @@ require("lazy").setup({
     {"nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate"
     },
-    {'preservim/nerdtree'},
     {'nvim-telescope/telescope.nvim',
         tag = '0.1.4',
         dependencies = {
@@ -38,6 +37,7 @@ require("lazy").setup({
     {"nvim-telescope/telescope-file-browser.nvim",
         dependencies = { "nvim-telescope/telescope.nvim"}
     },
+    {"mg979/vim-visual-multi"},
     {"tpope/vim-surround"},
     {"tpope/vim-repeat"},
     {"tpope/vim-fugitive"},
