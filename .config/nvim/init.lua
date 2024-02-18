@@ -9,4 +9,4 @@ require("telescope_config")
 require("lsp")
 require("completion")
 require("dap_config")
-
+require("ufo_config")
