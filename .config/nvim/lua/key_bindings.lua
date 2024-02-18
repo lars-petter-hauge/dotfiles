@@ -40,12 +40,17 @@ wk.register({
   },
   -- Default mapping of moving telescope result to quickfix is C-q. We map opening
   -- quickfix in telescope as C-q as well, so that one can toggle back and forth
-    ["<C-q>"] = { function() ts_builtin.quickfix() vim.cmd(":cclose") end, "Quickfix" },
+  ["<C-q>"] = { function() ts_builtin.quickfix() vim.cmd(":cclose") end, "Quickfix" },
   ["<leader>i"] = {
     name = "Info Diagnostics",
     o = { function() vim.diagnostic.open_float() end, "Open diagnostic window"},
     k = { function() vim.diagnostic.goto_prev() end, "Next diagnostic"},
     j = { function() vim.diagnostic.goto_next() end, "Previous diagnostic"}
+  },
+  ["<leader>p"] = {
+    name = "Pane operations",
+    v = { function() vim.cmd('vsplit') end, "Create vertical pane"},
+    h = { function() vim.cmd('split') end, "Create horizontal pane"},
   }
 })
 
