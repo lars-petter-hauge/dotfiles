@@ -18,7 +18,7 @@ vim.opt.syntax="on"
 vim.opt.scrolloff=20            -- keep n lines above/below cursor (pad lines around cursor)
 vim.opt.termguicolors = true
 vim.opt.hidden=true             -- Allow to have multiple buffers open without saving
-
+vim.opt.fillchars = {diff = " "}
 vim.g.python3_host_prog = HOME .. "/.pyenv/versions/nvim_env/bin/python"
 
 vim.g.mapleader = " "
