@@ -30,7 +30,7 @@ local ts_fb = require "telescope".extensions.file_browser
 wk.register({
   ["<leader>f"] = {
     name = "Telescope operations",
-    f = { function() ts_builtin.find_files() end, "Find File" },
+    f = { function() ts_builtin.find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }}) end, "Find File" },
     r = { function() ts_builtin.oldfiles() end, "Open Recent File" },
     b = { function() ts_builtin.buffers() end, "Open Buffers" },
     h = { function() ts_builtin.help_tags() end, "Help Tags" },
