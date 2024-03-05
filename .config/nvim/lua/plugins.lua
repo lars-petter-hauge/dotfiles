@@ -38,7 +38,6 @@ require("lazy").setup({
         dependencies = { "nvim-telescope/telescope.nvim"}
     },
     {'kevinhwang91/nvim-ufo', dependencies= 'kevinhwang91/promise-async'},
-    {"mg979/vim-visual-multi"},
     {"tpope/vim-surround"},
     {"tpope/vim-repeat"},
     {"tpope/vim-fugitive"},
