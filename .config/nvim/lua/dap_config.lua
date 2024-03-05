@@ -26,10 +26,21 @@ local function toggle_sidelayout()
     dapui.toggle({layout=2})
 end
 
+-- Wrap the continue function to enable loading launch.json.
+-- An added benefit of doing this on every call to continue
+-- is that changes to launch.json will be included immediately.
+-- Credits go to https://github.com/mfussenegger/nvim-dap/issues/20
+local continue = function()
+    if vim.fn.filereadable('.vscode/launch.json') then
+      require('dap.ext.vscode').load_launchjs()
+    end
+    dap.continue()
+  end
+
 wk.register({
   ["<leader>d"] = {
     name = "Debug Operations",
-    c = {function() dap.continue() end, "Continue (F5)"},
+    c = {function() continue() end, "Continue (F5)"},
     s = {function() dap.step_over() end, "Step Over (F1)"},
     i = {function() dap.step_into() end, "Step Into (F2)"},
     o = {function() dap.step_out() end, "Step Out (F3)"},
@@ -44,7 +55,7 @@ wk.register({
   },
 })
 -- Also map to function keys
-vim.keymap.set('n', '<F5>', function() dap.continue() end, {desc="Continue"})
+vim.keymap.set('n', '<F5>', function() continue() end, {desc="Continue"})
 vim.keymap.set('n', '<F1>', function() dap.step_over() end, {desc="Step Over"})
 vim.keymap.set('n', '<F2>', function() dap.step_into() end, {desc="Step Into"})
 vim.keymap.set('n', '<F3>', function() dap.step_out() end, {desc="Step Out"})
