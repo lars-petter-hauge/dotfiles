@@ -37,6 +37,7 @@ wk.register({
     g = { function() ts_builtin.live_grep() end, "Live Grep" },
     d = { function() ts_builtin.diagnostics() end, "Diagnostics" },
     t = { function() ts_fb.file_browser() end, "File Browser" },
+    s = { function() ts_builtin.git_status() end, "Git status" },
   },
   -- Default mapping of moving telescope result to quickfix is C-q. We map opening
   -- quickfix in telescope as C-q as well, so that one can toggle back and forth
