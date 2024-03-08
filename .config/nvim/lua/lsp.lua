@@ -39,7 +39,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- per character, hence it is quite slow for larger projects. Here we prompt with something
     -- for the user to start with
     -- keymapping to fit with other telescope search
-    vim.keymap.set("n", "<leader>fs", function()
+    vim.keymap.set("n", "<leader>fw", function()
             vim.ui.input({ prompt = "Workspace symbols: " }, function(query)
                     require("telescope.builtin").lsp_workspace_symbols({ query = query })
             end, { buffer = ev.buf})
