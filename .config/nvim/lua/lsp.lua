@@ -1,6 +1,17 @@
 
 local vim = vim
 
+-- Some settings are added in this section as they are directly
+-- related to lsp servers
+vim.o.foldcolumn = '1' -- '0' is not bad
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+
+-- Using ufo provider need remap `zR` and `zM`.
+vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+
 ------------ Language Server Protocol --------------
 
 -- Use LspAttach autocommand to only map the following keys
@@ -75,4 +86,8 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+-- The ufo plugin contains improved folding capabilities. The setting of capabilities
+-- also sets up
+require('ufo').setup()
 
