@@ -53,7 +53,7 @@ require('mason').setup()
 require('mason-lspconfig').setup()
 
 -- Enable the following language servers
--- Any servers added here will be automatically installed
+-- Any servers added here should be automatically installed
 -- Any additional server settings can be included and will be forwarded
 -- to the server setup
 local servers = {
@@ -62,6 +62,7 @@ local servers = {
     codelldb = {},
     pyright = {},
     debugpy = {},
+    tsserver = {}, -- MasonInstall typescript-language-server
     lua_ls = {},
 }
 
