@@ -43,6 +43,7 @@ require("lazy").setup({
     {"tpope/vim-fugitive"},
     {"tpope/vim-commentary"},
     {'mhinz/vim-signify'},
+    {"windwp/nvim-ts-autotag" },
     {"lukas-reineke/indent-blankline.nvim",
         main = "ibl",
         opts = {}

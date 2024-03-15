@@ -52,4 +52,5 @@ cmp.setup {
     { name = 'nvim_lsp_signature_help' },
   },
 }
-
+ -- Autocomplete closing brackets
+require('nvim-ts-autotag').setup()
