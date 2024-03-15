@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = ev.buf, desc="Hover Definition"})
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = ev.buf, desc="Signature help"})
     vim.keymap.set('n', 'grn', vim.lsp.buf.rename, { buffer = ev.buf, desc="Rename"})
-
+    vim.keymap.set('n', '<leader>fr', function() require('telescope.builtin').lsp_references() end, { buffer = ev.buf, desc="References word under cursor"})
     -- lsp_workspace_symbols gives an error with pyright (empty query) and urges
     -- the user to provide a text input. It is possible to use lsp_dynamic_workspace_symbols
     -- instead, but that includes a fairly large result. Also a search is performed
