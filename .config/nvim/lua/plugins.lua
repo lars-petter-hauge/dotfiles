@@ -28,9 +28,11 @@ require("lazy").setup({
         build = ":TSUpdate"
     },
     {'nvim-telescope/telescope.nvim',
-        tag = '0.1.4',
+        version = '*',
         dependencies = {
-            'nvim-lua/plenary.nvim',
+            {'nvim-lua/plenary.nvim',
+                version = '*',
+            },
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         }
     },
