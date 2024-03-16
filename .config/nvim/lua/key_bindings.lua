@@ -53,6 +53,8 @@ wk.register({
     name = "Pane operations",
     v = { function() vim.cmd('vsplit') end, "Create vertical pane"},
     h = { function() vim.cmd('split') end, "Create horizontal pane"},
-  }
+  },
+  ["<C-n>"] = { function () vim.cmd('cnext') end, "Next in Quickfix list"},
+  ["<C-m>"] = { function () vim.cmd('cprev') end, "Next in Quickfix list"}
 })
 
