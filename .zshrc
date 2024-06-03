@@ -18,15 +18,6 @@ unsetopt autopushd
 
 autoload -Uz compinit && compinit
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-# Leaving the setting here uncommented purposefully, as pyenv includes by default
-# The virtualenenv-init facilitates pyenv to change venv on directory change
-# looking for a python.version file. It is however fairly slow, and does so on
-# every command line call.
-# eval "$(pyenv virtualenv-init -)"
-
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
