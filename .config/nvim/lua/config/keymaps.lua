@@ -1,5 +1,4 @@
 local map = vim.keymap.set
-local delete = vim.keymap.del
 
 -- s is vim built-in, mapped to change single char under cursor
 -- Identical behaviour is achieved with e.g. cl. We want to use
@@ -10,5 +9,3 @@ map("v", "s", "S", { desc = "Surround", remap = true })
 -- Use same split as in tmux
 map("n", "<leader>wh", "<C-W>s", { desc = "Split Window Below", remap = true })
 map("n", "<leader>wv", "<C-W>v", { desc = "Split Window Right", remap = true })
-delete("n", "<leader>w|")
-delete("n", "<leader>w-")
