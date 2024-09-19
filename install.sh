@@ -13,6 +13,7 @@ files=("
   .config/nvim/lua/plugins/disabled.lua
   .config/nvim/lua/plugins/flash.lua
   .config/nvim/lua/plugins/general_plugins.lua
+  .config/nvim/lua/plugins/lualine.lua
 ")
 
 for file in $files; do
