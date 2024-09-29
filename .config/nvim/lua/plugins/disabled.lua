@@ -1,5 +1,6 @@
 return {
 	{ "folke/noice.nvim", enabled = false },
+	{ "akinsho/bufferline.nvim", enabled = false }, -- Tab view - don't really use tabs, requires mouse
 	{ "nvim-pack/nvim-spectre", enabled = false }, -- Search replace in multiple files. If needed outside of lsp, add it
 	{ "folke/todo-comments.nvim", enabled = false }, -- Dont really use todo in code..
 	{ "echasnovski/mini.pairs", enabled = false }, -- Adding espacing brackets, useful plugin, but also slightly annoying
