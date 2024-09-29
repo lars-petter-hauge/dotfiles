@@ -18,6 +18,19 @@ return {
 	},
 	{ "tpope/vim-surround" },
 	{
+		"neovim/nvim-lspconfig",
+		opts = {
+			servers = {
+				ruff = {
+					autostart = false,
+				},
+				jedi_language_server = {
+					autostart = false,
+				},
+			},
+		},
+	},
+	{
 		"folke/flash.nvim",
 		opts = {
 			rainbow = {
