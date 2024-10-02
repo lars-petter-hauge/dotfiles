@@ -4,6 +4,7 @@ olddir=${HOME}/dotfiles_old
 mkdir -p $olddir
 
 files=("
+  .gitconfig
   .alias
   .zshrc
   .p10k.zsh
