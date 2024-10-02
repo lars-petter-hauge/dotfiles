@@ -15,7 +15,7 @@ files=("
 
 for file in $files; do
   target=${HOME}/$file
-  if [ -f $target ]; then
+  if [ -f $target ] || [ -d $target ]; then
     if [ -L $target ]; then
       echo "Found existing symlink for $file, unlinking"
       unlink $target
