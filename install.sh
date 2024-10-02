@@ -13,6 +13,11 @@ files=("
   .config/nvim
 ")
 
+# The idea is that install.sh should not remove any existing files.
+# It should also be possible to redo install over and over.
+# Does not remove symlinks for files that are removed (i.e. file has
+# been added previously, symlinked using this script, and then removed
+# in a later commit)
 for file in $files; do
   target=${HOME}/$file
   if [ -f $target ] || [ -d $target ]; then
