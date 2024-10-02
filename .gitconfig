@@ -1,6 +1,6 @@
 [user]
-	email = larsenhauge@gmail.com
-	name = Lars Petter Hauge
+  email = larsenhauge@gmail.com
+  name = Lars Petter Hauge
 [core]
   editor = nvim
   pager = delta
