@@ -19,6 +19,10 @@ Live grep requires ripgrep to be installed (<leader> fg)
 The rust_analyser lsp expects Cargo to be installed. It is necessary to
 have a Cargo.toml in the root folder for the lsp server to function.
 
-## Install ``` git clone <https://github.com/lars-petter-hauge/dotfiles>
+## Install
 
-cd ~/dotfiles chmod +x install.sh ./install.sh ```
+```
+git clone https://github.com/lars-petter-hauge/dotfiles
+cd dotfiles
+./install.sh
+```
