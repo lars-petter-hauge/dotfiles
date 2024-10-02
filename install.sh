@@ -9,11 +9,7 @@ files=("
   .p10k.zsh
   .tmux.conf
   .vimrc
-  .config/nvim/lua/config/keymaps.lua
-  .config/nvim/lua/plugins/disabled.lua
-  .config/nvim/lua/plugins/flash.lua
-  .config/nvim/lua/plugins/general_plugins.lua
-  .config/nvim/lua/plugins/lualine.lua
+  .config/nvim
 ")
 
 for file in $files; do
