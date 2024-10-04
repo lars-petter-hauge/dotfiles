@@ -10,6 +10,9 @@
 [color]
   ui = true
 [delta]
+  side-by-side = true
+  line-numbers = true
+  diff-so-fancy = true
   navigate = true    # use n and N to move between diff sections
   map-styles = bold purple => syntax magenta, bold cyan => syntax blue
   features = my-dark-theme zebra-dark
