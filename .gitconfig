@@ -55,3 +55,6 @@
 
   # diff with vim
   d = difftool
+[pull]
+	ff = only
+	rebase = true
