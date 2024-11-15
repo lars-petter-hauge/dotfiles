@@ -45,14 +45,13 @@
   lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
 
   # inspect last commit
-  dl = "!git lg2 -1"
-  dlc = diff --cached HEAD^
+  sh = show HEAD
+  d = diff
+  ds = diff --staged
 
   # finding file
   f = "!git ls-files | grep -i"
 
-  # diff with vim
-  d = difftool
 [pull]
 	ff = only
 	rebase = true
