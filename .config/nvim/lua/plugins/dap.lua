@@ -100,8 +100,8 @@ return {
         { "<F6>", function() require("dap").down() end, desc = "Step Down (Stack) (F6)" },
         { "<F7>", function() require("dap").up() end, desc = "Step Up (Stack) (F7)" },
         { "<F8>", function() require("dap").restart() end, desc = "Restart Session (F8)" },
-        { "p", open_floating, desc = "Pop out window" },
-        { "h", toggle_sidelayout, desc = "Toggle sidebar" },
+        { "<leader>dp", open_floating, desc = "Pop out window" },
+        { "<leader>dh", toggle_sidelayout, desc = "Toggle sidebar" },
       }
     end
   },
