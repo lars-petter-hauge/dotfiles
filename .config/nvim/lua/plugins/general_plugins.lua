@@ -9,6 +9,12 @@ local function setupCustomHighlightGroup()
 end
 
 return {
+	"hrsh7th/nvim-cmp",
+	opts = {
+		experimental = {
+			ghost_text = false,
+		},
+	},
 	{
 		"tpope/vim-fugitive",
 		keys = {
