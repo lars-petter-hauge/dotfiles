@@ -21,6 +21,7 @@ return {
 			{ "<leader>gB", "<cmd>Git blame<cr>", desc = "Git blame in gutter" },
 			{ "<leader>gd", "<cmd>Gvdiffsplit<cr>", desc = "Diff split vertical buffers" },
 		},
+		cmd = { "Gedit", "Git", "Gsplit" },
 	},
 	{ "tpope/vim-surround" },
 	{
