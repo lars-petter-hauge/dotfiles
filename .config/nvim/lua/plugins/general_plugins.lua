@@ -9,6 +9,20 @@ local function setupCustomHighlightGroup()
 end
 
 return {
+	{
+		"folke/snacks.nvim",
+		opts = {
+			dashboard = { enabled = false },
+			indent = { enabled = false },
+			input = { enabled = false },
+			notifier = { enabled = false },
+			scope = { enabled = false },
+			scroll = { enabled = false },
+			statuscolumn = { enabled = false },
+			toggle = { map = LazyVim.safe_keymap_set },
+			words = { enabled = false },
+		},
+	},
 	"hrsh7th/nvim-cmp",
 	opts = {
 		experimental = {
