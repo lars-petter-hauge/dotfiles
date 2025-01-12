@@ -50,10 +50,10 @@ return {
 		"neovim/nvim-lspconfig",
 		opts = {
 			servers = {
-				ruff = {
-					autostart = false,
+				pyright = {
+					autostart = true,
 				},
-				jedi_language_server = {
+				ruff = {
 					autostart = false,
 				},
 			},
