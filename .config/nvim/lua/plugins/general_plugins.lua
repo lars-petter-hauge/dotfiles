@@ -23,6 +23,14 @@ return {
 		},
 		cmd = { "Gedit", "Git", "Gsplit" },
 	},
+	{
+		"rbong/vim-flog",
+		lazy = true,
+		cmd = { "Flog", "Flogsplit", "Floggit" },
+		dependencies = {
+			"tpope/vim-fugitive",
+		},
+	},
 	{ "tpope/vim-surround" },
 	{
 		"neovim/nvim-lspconfig",
