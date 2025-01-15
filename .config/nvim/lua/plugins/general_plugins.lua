@@ -44,6 +44,10 @@ return {
 		dependencies = {
 			"tpope/vim-fugitive",
 		},
+		keys = {
+			{ "<leader>gs", "<cmd>Floggit<cr>", desc = "Git blame in gutter" },
+			{ "<leader>gl", "<cmd>Flogsplit<cr>", desc = "Diff split vertical buffers" },
+		},
 	},
 	{ "tpope/vim-surround" },
 	{
