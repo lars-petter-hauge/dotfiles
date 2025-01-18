@@ -45,8 +45,8 @@ return {
 			"tpope/vim-fugitive",
 		},
 		keys = {
-			{ "<leader>gs", "<cmd>Floggit<cr>", desc = "Git blame in gutter" },
-			{ "<leader>gl", "<cmd>Flogsplit<cr>", desc = "Diff split vertical buffers" },
+			{ "<leader>gs", "<cmd>Floggit<cr>", desc = "Open Git status" },
+			{ "<leader>gl", "<cmd>Flogsplit<cr>", desc = "Open Git Log" },
 		},
 	},
 	{ "tpope/vim-surround" },
