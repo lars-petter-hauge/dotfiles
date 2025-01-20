@@ -33,11 +33,18 @@ return {
 		"tpope/vim-fugitive",
 		keys = {
 			{ "<leader>gB", "<cmd>Git blame<cr>", desc = "Git blame in gutter" },
-			{ "<leader>gd", "<cmd>Gvdiffsplit<cr>", desc = "Diff split vertical buffers" },
 		},
 		cmd = { "Gedit", "Git", "Gsplit" },
 	},
 	{ "tpope/vim-surround" },
+	{
+		"sindrets/diffview.nvim",
+		cmd = { "DiffviewFileHistory", "DiffviewFileHistory %" },
+		keys = {
+			{ "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Open diff view for index" },
+			{ "<leader>gl", "<cmd>DiffviewFileHistory<cr>", desc = "Open git log" },
+		},
+	},
 	{
 		"neovim/nvim-lspconfig",
 		opts = {
