@@ -37,18 +37,6 @@ return {
 		},
 		cmd = { "Gedit", "Git", "Gsplit" },
 	},
-	{
-		"rbong/vim-flog",
-		lazy = true,
-		cmd = { "Flog", "Flogsplit", "Floggit" },
-		dependencies = {
-			"tpope/vim-fugitive",
-		},
-		keys = {
-			{ "<leader>gs", "<cmd>Floggit<cr>", desc = "Open Git status" },
-			{ "<leader>gl", "<cmd>Flogsplit<cr>", desc = "Open Git Log" },
-		},
-	},
 	{ "tpope/vim-surround" },
 	{
 		"neovim/nvim-lspconfig",
