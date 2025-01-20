@@ -33,16 +33,26 @@ return {
 		"tpope/vim-fugitive",
 		keys = {
 			{ "<leader>gB", "<cmd>Git blame<cr>", desc = "Git blame in gutter" },
+			{ "<leader>gs", "<cmd>Git<cr>", desc = "Git status" },
 		},
 		cmd = { "Gedit", "Git", "Gsplit" },
+	},
+	{
+		"ibhagwan/fzf-lua",
+		keys = {
+			{ "<leader>gc", false },
+			{ "<leader>gl", "<cmd>FzfLua git_commits<CR>", desc = "Git log" },
+			{ "<leader>gs", false },
+		},
 	},
 	{ "tpope/vim-surround" },
 	{
 		"sindrets/diffview.nvim",
 		cmd = { "DiffviewFileHistory", "DiffviewFileHistory %" },
 		keys = {
-			{ "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Open diff view for index" },
-			{ "<leader>gl", "<cmd>DiffviewFileHistory<cr>", desc = "Open git log" },
+			{ "<leader>gf", "<cmd>DiffviewOpen<cr>", desc = "Open diff view for index" },
+			{ "<leader>gd", "<cmd>DiffviewFileHistory<cr>", desc = "Open Git Log with diffs" },
+			{ "<leader>gl", mode = { "v" }, ":DiffviewFileHistory<cr>", desc = "Open log for selected range" },
 		},
 	},
 	{
