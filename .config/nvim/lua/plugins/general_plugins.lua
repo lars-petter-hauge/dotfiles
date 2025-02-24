@@ -42,6 +42,7 @@ return {
 		keys = {
 			{ "<leader>gc", false },
 			{ "<leader>gl", "<cmd>FzfLua git_commits<CR>", desc = "Git log" },
+			{ "<leader>gL", "<cmd>FzfLua git_bcommits<CR>", desc = "Git log buffer" },
 			{ "<leader>gs", false },
 		},
 	},
