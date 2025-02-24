@@ -1,3 +1,5 @@
+local git_search = require("plugins.git_search.git_search")
+
 local function setupCustomHighlightGroup()
 	vim.api.nvim_command("hi clear FlashMatch")
 	vim.api.nvim_command("hi clear FlashCurrent")
@@ -44,6 +46,8 @@ return {
 			{ "<leader>gl", "<cmd>FzfLua git_commits<CR>", desc = "Git log" },
 			{ "<leader>gL", "<cmd>FzfLua git_bcommits<CR>", desc = "Git log buffer" },
 			{ "<leader>gs", false },
+			{ "<leader>gS", git_search.history_search, desc = "Git Search all commit body (pickaxe)" },
+			{ "<leader>gS", mode = { "v" }, git_search.line_search, desc = "Git search visual selection" },
 		},
 	},
 	{ "tpope/vim-surround" },
