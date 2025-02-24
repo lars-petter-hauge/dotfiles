@@ -7,6 +7,83 @@ local function setupCustomHighlightGroup()
 	vim.api.nvim_command("hi FlashCurrent guibg=#456268 guifg=#D0E8F2")
 	vim.api.nvim_command("hi FlashLabel guibg=#A25772 guifg=#EEF5FF")
 end
+local core = require("fzf-lua.core")
+local path = require("fzf-lua.path")
+local utils = require("fzf-lua.utils")
+local config = require("fzf-lua.config")
+
+local function set_git_cwd_args(opts)
+	-- verify cwd is a git repo, override user supplied
+	-- cwd if cwd isn't a git repo, error was already
+	-- printed to `:messages` by 'path.git_root'
+	local git_root = path.git_root(opts)
+	if not opts.cwd or not git_root then
+		opts.cwd = git_root
+	end
+	if opts.git_dir or opts.git_worktree then
+		opts.cmd = path.git_cwd(opts.cmd, opts)
+	end
+	return opts
+end
+
+local function git_cmd(opts)
+	opts = set_git_cwd_args(opts)
+	if not opts.cwd then
+		return
+	end
+	opts = core.set_header(opts, opts.headers or { "cwd" })
+	core.fzf_exec(opts.cmd, opts)
+end
+
+local function line_search(opts)
+	opts = config.normalize_opts(opts, "git.commits")
+	if not opts then
+		return
+	end
+	if opts.preview then
+		opts.preview = path.git_cwd(opts.preview, opts)
+		if type(opts.preview_pager) == "function" then
+			opts.preview_pager = opts.preview_pager()
+		end
+		if opts.preview_pager then
+			opts.preview = string.format("%s | %s", opts.preview, utils._if_win_normalize_vars(opts.preview_pager))
+		end
+	end
+	opts = core.set_header(opts, opts.headers or { "actions", "cwd" })
+	local s_start = vim.fn.getpos("v")
+	local s_end = vim.fn.getpos(".")
+
+	opts.cmd = "git log -L"
+		.. s_start[2]
+		.. ","
+		.. s_end[2]
+		.. ":"
+		.. vim.api.nvim_buf_get_name(0)
+		.. " --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
+	return git_cmd(opts)
+end
+
+local function pickaxe_search(opts)
+	opts = config.normalize_opts(opts, "git.commits")
+	if not opts then
+		return
+	end
+	if opts.preview then
+		opts.preview = path.git_cwd(opts.preview, opts)
+		if type(opts.preview_pager) == "function" then
+			opts.preview_pager = opts.preview_pager()
+		end
+		if opts.preview_pager then
+			opts.preview = string.format("%s | %s", opts.preview, utils._if_win_normalize_vars(opts.preview_pager))
+		end
+	end
+	opts = core.set_header(opts, opts.headers or { "actions", "cwd" })
+	local user_input = vim.fn.input("Enter string to search for:")
+	opts.cmd = "git log -S'"
+		.. user_input
+		.. "' --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
+	return git_cmd(opts)
+end
 
 return {
 	{
@@ -44,6 +121,8 @@ return {
 			{ "<leader>gl", "<cmd>FzfLua git_commits<CR>", desc = "Git log" },
 			{ "<leader>gL", "<cmd>FzfLua git_bcommits<CR>", desc = "Git log buffer" },
 			{ "<leader>gs", false },
+			{ "<leader>gS", pickaxe_search },
+			{ "<leader>gS", mode = { "v" }, line_search, desc = "Git search visual selection" },
 		},
 	},
 	{ "tpope/vim-surround" },
