@@ -59,7 +59,7 @@ local function line_search(opts)
 		.. s_end[2]
 		.. ":"
 		.. vim.api.nvim_buf_get_name(0)
-		.. " --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
+		.. " -s --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
 	return git_cmd(opts)
 end
 
