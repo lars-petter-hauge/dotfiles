@@ -50,13 +50,19 @@ local function line_search(opts)
 		end
 	end
 	opts = core.set_header(opts, opts.headers or { "actions", "cwd" })
-	local s_start = vim.fn.getpos("v")
-	local s_end = vim.fn.getpos(".")
+	local line_start = vim.fn.getpos("v")[2]
+	local line_end = vim.fn.getpos(".")[2]
+
+	-- If a visual selection starts at the bottom and moves up, cursor pos is prior to beginning of selection
+	-- Likewise if user press ctrl+o to toggle which end of visual selection to set cursor
+	if line_start > line_end then
+		line_start, line_end = line_end, line_start
+	end
 
 	opts.cmd = "git log -L"
-		.. s_start[2]
+		.. line_start
 		.. ","
-		.. s_end[2]
+		.. line_end
 		.. ":"
 		.. vim.api.nvim_buf_get_name(0)
 		.. " -s --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
