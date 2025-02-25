@@ -127,7 +127,7 @@ return {
 			{ "<leader>gl", "<cmd>FzfLua git_commits<CR>", desc = "Git log" },
 			{ "<leader>gL", "<cmd>FzfLua git_bcommits<CR>", desc = "Git log buffer" },
 			{ "<leader>gs", false },
-			{ "<leader>gS", pickaxe_search },
+			{ "<leader>gS", pickaxe_search, desc = "Git Search all commit body (pickaxe)" },
 			{ "<leader>gS", mode = { "v" }, line_search, desc = "Git search visual selection" },
 		},
 	},
