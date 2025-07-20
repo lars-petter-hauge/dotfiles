@@ -74,6 +74,17 @@ function M.history_search(opts)
 	if not opts then
 		return
 	end
+
+	local user_input
+	local mode = vim.api.nvim_get_mode().mode
+	if mode == "v" or mode == "V" then
+		local reg_opts = {}
+		reg_opts.type = mode
+		user_input = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), reg_opts)
+	else
+		user_input = vim.fn.input("Enter string to search for:")
+	end
+
 	if opts.preview then
 		opts.preview = path.git_cwd(opts.preview, opts)
 		if type(opts.preview_pager) == "function" then
@@ -84,7 +95,6 @@ function M.history_search(opts)
 		end
 	end
 	opts = core.set_header(opts, opts.headers or { "actions", "cwd" })
-	local user_input = vim.fn.input("Enter string to search for:")
 	opts.cmd = "git log -S'"
 		.. user_input
 		.. "' --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
