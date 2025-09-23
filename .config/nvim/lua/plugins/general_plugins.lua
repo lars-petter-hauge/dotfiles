@@ -10,17 +10,6 @@ local function setupCustomHighlightGroup()
 	vim.api.nvim_command("hi FlashLabel guibg=#A25772 guifg=#EEF5FF")
 end
 
-function ToggleDiffView(diffcommand)
-	if next(require("diffview.lib").views) == nil then
-		vim.cmd(diffcommand)
-	else
-		vim.cmd("DiffviewClose")
-	end
-end
-
-local ToggleDiffViewBuffer = ToggleDiffView("DiffViewOpen")
-local ToggleDiffViewHistory = ToggleDiffView("DiffViewHistoryOpen")
-
 return {
 	{
 		"folke/snacks.nvim",
@@ -65,11 +54,28 @@ return {
 	{
 		"sindrets/diffview.nvim",
 		cmd = { "DiffviewFileHistory", "DiffviewFileHistory %" },
-		keys = {
-			{ "<leader>gd", ToggleDiffViewBuffer, desc = "Toggle diff view for index" },
-			{ "<leader>gD", ToggleDiffViewHistory, desc = "Toggle Git Log with diffs" },
-			{ "<leader>gl", mode = { "v" }, ":DiffviewFileHistory<cr>", desc = "Open log for selected range" },
-		},
+		config = function()
+			local function ToggleDiffView(diffcommand)
+				local diffview = require("diffview.lib")
+				if next(diffview.views) == nil then
+					vim.cmd(diffcommand)
+				else
+					vim.cmd("DiffviewClose")
+				end
+			end
+
+			local ToggleDiffViewBuffer = function()
+				ToggleDiffView("DiffviewOpen")
+			end
+			local ToggleDiffViewHistory = function()
+				ToggleDiffView("DiffviewFileHistory")
+			end
+
+			vim.keymap.set("n", "<leader>gd", ToggleDiffViewBuffer, { desc = "Toggle diff view for index" })
+			vim.keymap.set("n", "<leader>gD", ToggleDiffViewHistory, { desc = "Toggle Git Log with diffs" })
+			vim.keymap.set("v", "<leader>gl", ":DiffviewFileHistory<CR>", { desc = "Open log for selected range" })
+		end,
+		lazy = false,
 	},
 	{
 		"neovim/nvim-lspconfig",
