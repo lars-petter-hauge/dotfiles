@@ -16,7 +16,7 @@ export LC_CTYPE=en_US.UTF-8
 
 unsetopt autopushd
 
-autoload -Uz compinit && compinit
+autoload -Uz compinit && compinit -u
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
