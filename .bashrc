@@ -33,3 +33,5 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 # <end pyenv config>
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
