@@ -11,3 +11,8 @@ alias curl="curl -w '\n'" # Add newline after response
 
 # Git
 alias glog="git log --graph --color=always --format=\"%C(auto)%h%d %s %C(green)%C(bold)%cr\""
+
+alias watchlg="watch -n 1 --color git lg --color=always"
+alias watchdiff="watch -n 1 --color git diff -U0 --color=always"
+alias watchstaged="watch -n 1 --color git diff -U0 --staged --color=always"
+alias imgcat="~/GitProjects/dotfiles/imgcat"
