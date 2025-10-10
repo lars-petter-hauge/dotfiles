@@ -15,4 +15,5 @@ alias glog="git log --graph --color=always --format=\"%C(auto)%h%d %s %C(green)%
 alias watchlg="watch -n 1 --color git lg --color=always"
 alias watchdiff="watch -n 1 --color git diff -U0 --color=always"
 alias watchstaged="watch -n 1 --color git diff -U0 --staged --color=always"
+alias watchtree="watch -n 1 --color tree .git -I hooks"
 alias imgcat="~/GitProjects/dotfiles/imgcat"
