@@ -20,11 +20,7 @@ autoload -Uz compinit && compinit -u
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-source ~/powerlevel10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
+PS1='%F{blue}%~ %(?.%F{green}.%F{red})%#%f '
 
 # Source additional files; alias, post-rc
 if [ -f $HOME/.alias ]; then source $HOME/.alias; fi
