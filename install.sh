@@ -7,10 +7,10 @@ files=("
   .gitconfig
   .alias
   .zshrc
-  .p10k.zsh
   .tmux.conf
   .vimrc
   .config/nvim
+  .config/starship.toml
 ")
 
 # The idea is that install.sh should not remove any existing files.
