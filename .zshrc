@@ -19,3 +19,5 @@ if [ -f $HOME/.alias ]; then source $HOME/.alias; fi
 if [ -f $HOME/.post-rc ]; then source $HOME/.post-rc; fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+eval "$(starship init zsh)"
