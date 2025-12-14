@@ -14,7 +14,7 @@ $nodejs\
 $python\
 $rust\
 [](fg:#1d2230)\
-\n$character"""
+$character"""
 
 [directory]
 style = "fg:#090c0c bg:#769ff0"
