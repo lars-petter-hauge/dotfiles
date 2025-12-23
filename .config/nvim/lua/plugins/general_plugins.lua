@@ -26,6 +26,11 @@ return {
 		},
 	},
 	{
+		"github/copilot.vim",
+		keys = {},
+		lazy = false,
+	},
+	{
 		"tpope/vim-fugitive",
 		keys = {
 			{ "<leader>gB", "<cmd>Git blame<cr>", desc = "Git blame in gutter" },
