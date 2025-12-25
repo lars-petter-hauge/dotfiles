@@ -2,31 +2,10 @@ local M = {}
 
 -- Get the visual selection text
 local function get_visual_selection()
-	local line_start = vim.fn.getpos("v")[2]
-	local line_end = vim.fn.getpos(".")[2]
-	local col_start = vim.fn.getpos("v")[3]
-	local col_end = vim.fn.getpos(".")[3]
-
-	-- If selection is made backwards, swap positions
-	if line_start > line_end or (line_start == line_end and col_start > col_end) then
-		line_start, line_end = line_end, line_start
-		col_start, col_end = col_end, col_start
-	end
-
-	local lines = vim.fn.getline(line_start, line_end)
-	-- Ensure lines is always a table
-	if type(lines) == "string" then
-		lines = { lines }
-	end
-
-	-- Handle single line selection
-	if #lines == 1 then
-		lines[1] = string.sub(lines[1], col_start, col_end)
-	else
-		-- Handle multi-line selection
-		lines[1] = string.sub(lines[1], col_start)
-		lines[#lines] = string.sub(lines[#lines], 1, col_end)
-	end
+	local reg_opts = { type = vim.fn.mode() }
+	local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), reg_opts)
+	local line_start = math.min(vim.fn.getpos("v")[2], vim.fn.getpos(".")[2])
+	local line_end = math.max(vim.fn.getpos("v")[2], vim.fn.getpos(".")[2])
 
 	return {
 		text = table.concat(lines, "\n"),
