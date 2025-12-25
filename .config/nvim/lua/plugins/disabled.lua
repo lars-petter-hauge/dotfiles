@@ -8,4 +8,5 @@ return {
 	{ "garymjr/nvim-snippets", enabled = false }, -- Don't really use snippets
 	{ "nvim-mini/mini.ai", enabled = false }, -- More exhaustive text object identification. Perhaps good, but need to learn default better
 	{ "folke/persistence.nvim", enabled = false }, -- session management. Currently not used much.. perhaps marks is the only thing I would like to store. I should rather improve on not closing nvim all the time
+	{ "linux-cultist/venv-selector.nvim", enabled = false },
 }
