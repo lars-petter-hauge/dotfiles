@@ -1,5 +1,6 @@
 return {
 	{ "folke/noice.nvim", enabled = false },
+	{ "MunifTanjim/nui.nvim", enabled = false },
 	{ "akinsho/bufferline.nvim", enabled = false }, -- Tab view - don't really use tabs, requires mouse
 	{ "folke/todo-comments.nvim", enabled = false }, -- Dont really use todo in code..
 	{ "nvim-mini/mini.pairs", enabled = false }, -- Adding espacing brackets, useful plugin, but also slightly annoying
