@@ -107,12 +107,52 @@ function M.history_search(opts)
 	opts.prompt = "GitSearch> "
 	opts.exec_empty_query = false
 
+	-- Store query for preview access
+	local current_query = ""
+
+	-- Custom preview that shows commit header + matching hunks
+	opts.preview = {
+		type = "cmd",
+		fn = function(items)
+			if not items or #items == 0 or items[1] == "" then
+				return "echo ''"
+			end
+			local commit_hash = items[1]:match("^(%S+)")
+			if not commit_hash then
+				return "echo ''"
+			end
+
+			local hash = vim.fn.shellescape(commit_hash)
+			local query = vim.fn.shellescape(current_query)
+
+			if current_query == "" then
+				return "git show --color " .. hash
+			end
+
+			-- Build preview command in parts for readability
+			local show_header = string.format("git --no-pager show --color --no-patch %s", hash)
+			local show_diff = string.format("git --no-pager diff-tree -p --color %s", hash)
+			local highlight_matches =
+				string.format("rg --color=always --colors 'match:bg:yellow' --colors 'match:fg:black' -C 10 %s", query)
+			local fallback = string.format("(%s && echo && echo 'No matches found in diff')", show_header)
+
+			-- Combine: header + separator + (filtered diff OR fallback)
+			return string.format("%s && echo && %s | %s || %s", show_header, show_diff, highlight_matches, fallback)
+		end,
+	}
+
 	return core.fzf_live(function(args)
 		local query = args or ""
 		if type(query) == "table" then
 			query = args[1] or ""
 		end
-		return "git log -S" .. vim.fn.shellescape(query) .. " --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
+		current_query = query
+		if query == "" then
+			return "echo ''"
+		end
+		return "git log -S"
+			.. vim.fn.shellescape(query)
+			.. " --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
 	end, opts)
 end
 
