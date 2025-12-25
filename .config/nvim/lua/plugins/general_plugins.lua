@@ -16,7 +16,7 @@ return {
 		opts = {
 			dashboard = { enabled = false },
 			indent = { enabled = false },
-			input = { enabled = false },
+			input = { enabled = true },
 			notifier = { enabled = false },
 			scope = { enabled = false },
 			scroll = { enabled = false },
