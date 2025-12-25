@@ -61,20 +61,17 @@ function M.line_search(opts)
 end
 
 function M.history_search(opts)
-	-- The search function is not ideal. First off, the preview shows the entire commit, makes more sense to
-	-- show only the locations where a match has been found. Furthermore it would be better to open the fzf search
-	-- immediately instead of giving a prompt, and then to live matching on searching the commit history
-	-- There could be performance issues on this though, unsure how to handle those.
 	opts = config.normalize_opts(opts, "git.commits")
 	if not opts then
 		return
 	end
 
-	local function execute_search(user_input)
-		if not user_input or user_input == "" then
-			return
-		end
-
+	local mode = vim.api.nvim_get_mode().mode
+	if mode == "v" or mode == "V" then
+		local reg_opts = {}
+		reg_opts.type = mode
+		local user_input = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), reg_opts)
+		user_input = table.concat(user_input, "\n")
 		if opts.preview then
 			opts.preview = path.git_cwd(opts.preview, opts)
 			if type(opts.preview_pager) == "function" then
@@ -91,17 +88,32 @@ function M.history_search(opts)
 		return git_cmd(opts)
 	end
 
-	local mode = vim.api.nvim_get_mode().mode
-	if mode == "v" or mode == "V" then
-		local reg_opts = {}
-		reg_opts.type = mode
-		local user_input = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), reg_opts)
-		execute_search(user_input)
-	else
-		vim.ui.input({ prompt = "Search git history: " }, function(user_input)
-			execute_search(user_input)
-		end)
+	opts = set_git_cwd_args(opts)
+	if not opts.cwd then
+		return
 	end
+
+	if opts.preview then
+		opts.preview = path.git_cwd(opts.preview, opts)
+		if type(opts.preview_pager) == "function" then
+			opts.preview_pager = opts.preview_pager()
+		end
+		if opts.preview_pager then
+			opts.preview = string.format("%s | %s", opts.preview, utils._if_win_normalize_vars(opts.preview_pager))
+		end
+	end
+
+	opts = core.set_header(opts, opts.headers or { "actions", "cwd" })
+	opts.prompt = "GitSearch> "
+	opts.exec_empty_query = false
+
+	return core.fzf_live(function(args)
+		local query = args or ""
+		if type(query) == "table" then
+			query = args[1] or ""
+		end
+		return "git log -S" .. vim.fn.shellescape(query) .. " --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
+	end, opts)
 end
 
 return M
