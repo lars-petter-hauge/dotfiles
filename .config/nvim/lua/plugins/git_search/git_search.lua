@@ -70,30 +70,38 @@ function M.history_search(opts)
 		return
 	end
 
-	local user_input
+	local function execute_search(user_input)
+		if not user_input or user_input == "" then
+			return
+		end
+
+		if opts.preview then
+			opts.preview = path.git_cwd(opts.preview, opts)
+			if type(opts.preview_pager) == "function" then
+				opts.preview_pager = opts.preview_pager()
+			end
+			if opts.preview_pager then
+				opts.preview = string.format("%s | %s", opts.preview, utils._if_win_normalize_vars(opts.preview_pager))
+			end
+		end
+		opts = core.set_header(opts, opts.headers or { "actions", "cwd" })
+		opts.cmd = "git log -S'"
+			.. user_input
+			.. "' --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
+		return git_cmd(opts)
+	end
+
 	local mode = vim.api.nvim_get_mode().mode
 	if mode == "v" or mode == "V" then
 		local reg_opts = {}
 		reg_opts.type = mode
-		user_input = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), reg_opts)
+		local user_input = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), reg_opts)
+		execute_search(user_input)
 	else
-		user_input = vim.fn.input("Enter string to search for:")
+		vim.ui.input({ prompt = "Search git history: " }, function(user_input)
+			execute_search(user_input)
+		end)
 	end
-
-	if opts.preview then
-		opts.preview = path.git_cwd(opts.preview, opts)
-		if type(opts.preview_pager) == "function" then
-			opts.preview_pager = opts.preview_pager()
-		end
-		if opts.preview_pager then
-			opts.preview = string.format("%s | %s", opts.preview, utils._if_win_normalize_vars(opts.preview_pager))
-		end
-	end
-	opts = core.set_header(opts, opts.headers or { "actions", "cwd" })
-	opts.cmd = "git log -S'"
-		.. user_input
-		.. "' --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
-	return git_cmd(opts)
 end
 
 return M
