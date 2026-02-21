@@ -1,7 +1,6 @@
 return {
 	{ "akinsho/bufferline.nvim", enabled = false }, -- Tab view - don't really use tabs, requires mouse
 	{ "folke/todo-comments.nvim", enabled = false }, -- Dont really use todo in code..
-	{ "nvim-mini/mini.pairs", enabled = false }, -- Adding espacing brackets, useful plugin, but also slightly annoying
 	{ "rafamadriz/friendly-snippets", enabled = false }, -- Don't really use snippets
 	{ "garymjr/nvim-snippets", enabled = false }, -- Don't really use snippets
 	{ "nvim-mini/mini.ai", enabled = false }, -- More exhaustive text object identification. Perhaps good, but need to learn default better
