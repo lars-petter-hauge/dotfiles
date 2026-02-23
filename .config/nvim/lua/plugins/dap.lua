@@ -88,6 +88,20 @@ return {
 					end,
 					desc = "Toggle Breakpoint",
 				},
+				{
+					"<leader>dB",
+					function()
+						local condition = vim.fn.input("Breakpoint condition (optional): ")
+						local hit_condition = vim.fn.input("Hit count (optional): ")
+
+						-- Convert empty strings to nil
+						condition = condition ~= "" and condition or nil
+						hit_condition = hit_condition ~= "" and hit_condition or nil
+
+						require("dap").toggle_breakpoint(condition, hit_condition)
+					end,
+					desc = "Debug: Toggle Advanced Breakpoint",
+				},
 				{ "<leader>dc", continue, desc = "Run/Continue (F5)" },
 				{
 					"<leader>dC",
