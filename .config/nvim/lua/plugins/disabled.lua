@@ -4,5 +4,12 @@ return {
 	{ "rafamadriz/friendly-snippets", enabled = false }, -- Don't really use snippets
 	{ "garymjr/nvim-snippets", enabled = false }, -- Don't really use snippets
 	{ "folke/persistence.nvim", enabled = false }, -- session management. Currently not used much.. perhaps marks is the only thing I would like to store. I should rather improve on not closing nvim all the time
+	{ "rcarriga/nvim-dap-ui", enabled = false }, -- Default dap extra ui. Must be disabled in order to not conflict with nvim-dap-view
+	{
+		"mfussenegger/nvim-dap",
+		dependencies = {
+			"igorlfs/nvim-dap-view",
+		},
+	}, -- Must create the dependency override in this file separately from the dap config section.
 	{ "linux-cultist/venv-selector.nvim", enabled = false },
 }
