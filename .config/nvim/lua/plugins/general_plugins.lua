@@ -53,13 +53,19 @@ return {
 	{
 		"sindrets/diffview.nvim",
 		cmd = { "DiffviewFileHistory", "DiffviewFileHistory %" },
-		config = function()
+		opts = {
+			enhanced_diff_hl = true,
+		},
+		config = function(_, opts)
+			require("diffview").setup(opts)
 			local function ToggleDiffView(diffcommand)
 				local diffview = require("diffview.lib")
 				if next(diffview.views) == nil then
+					vim.opt.relativenumber = false
 					vim.cmd(diffcommand)
 				else
 					vim.cmd("DiffviewClose")
+					vim.opt.relativenumber = true
 				end
 			end
 
