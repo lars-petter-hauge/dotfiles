@@ -102,8 +102,11 @@ return {
 		"neovim/nvim-lspconfig",
 		opts = {
 			servers = {
-				pyright = {
+				ty = {
 					autostart = true,
+				},
+				pyright = {
+					autostart = false,
 				},
 				ruff = {
 					autostart = false,

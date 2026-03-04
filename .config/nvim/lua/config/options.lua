@@ -6,5 +6,5 @@
 -- that this is where one changes lsp. Would have thought that configuring
 -- "neovim/nvim-lspconfig", would be the place to do this, but it is also required
 -- for these two.
-vim.g.lazyvim_python_lsp = "pyright"
+vim.g.lazyvim_python_lsp = "ty"
 vim.g.lazyvim_python_ruff = "ruff"
