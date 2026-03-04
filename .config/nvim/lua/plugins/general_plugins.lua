@@ -10,6 +10,18 @@ local function setupCustomHighlightGroup()
 	vim.api.nvim_command("hi FlashLabel guibg=#A25772 guifg=#EEF5FF")
 end
 
+local function toggleGutterBlame()
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		local buf = vim.api.nvim_win_get_buf(win)
+		local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+		if ft == "fugitiveblame" then
+			vim.api.nvim_win_close(win, false)
+			return
+		end
+	end
+	vim.cmd("Git blame")
+end
+
 return {
 	{
 		"folke/snacks.nvim",
@@ -33,7 +45,11 @@ return {
 	{
 		"tpope/vim-fugitive",
 		keys = {
-			{ "<leader>gB", "<cmd>Git blame<cr>", desc = "Git blame in gutter" },
+			{
+				"<leader>gB",
+				toggleGutterBlame,
+				desc = "Toggle Git blame",
+			},
 			{ "<leader>gs", "<cmd>Git<cr>", desc = "Git status" },
 		},
 		cmd = { "Gedit", "Git", "Gsplit" },
