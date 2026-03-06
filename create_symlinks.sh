@@ -11,6 +11,7 @@ files=("
   .vimrc
   .config/nvim
   .config/starship.toml
+  .copilot/copilot-instructions.md
 ")
 
 # The idea is that install.sh should not remove any existing files.
