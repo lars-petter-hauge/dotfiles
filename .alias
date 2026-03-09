@@ -22,3 +22,16 @@ decomp() {
   [ -f "$1" ] || { echo "usage: decomp <file>" >&2; return 1; }
   python3 -c 'import sys,zlib; sys.stdout.buffer.write(zlib.decompress(open(sys.argv[1],"rb").read()))' "$1"
 }
+
+rand_word_commit() {
+  COUNT="$1"
+
+  for ((i = 1; i <= COUNT; i++)); do
+    rand=$(shuf -n 1 /usr/share/dict/words)
+    sed -i "s/{[^}]*}/{ $rand }/g" content
+    git add content
+    git commit -m "Update random word to: $rand"
+
+    echo "Commit $i: set word to '$rand'"
+  done
+  }
