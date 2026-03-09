@@ -35,3 +35,9 @@ rand_word_commit() {
     echo "Commit $i: set word to '$rand'"
   done
   }
+
+_FUNCTIONS_DIR="$(dirname "$(readlink -f "${(%):-%x}")")"
+
+lorem_impsum(){
+  cat "$_FUNCTIONS_DIR/lorem_ipsum"
+  }
