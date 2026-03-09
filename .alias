@@ -27,8 +27,8 @@ rand_word_commit() {
 
   for ((i = 1; i <= COUNT; i++)); do
     rand=$(shuf -n 1 /usr/share/dict/words)
-    sed -i "s/{[^}]*}/{ $rand }/g" content
-    git add content
+    sed -i "s/{[^}]*}/{ $rand }/g" $2
+    git add $2
     git commit -m "Update random word to: $rand"
 
     echo "Commit $i: set word to '$rand'"
