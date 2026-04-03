@@ -10,17 +10,19 @@ local function setupCustomHighlightGroup()
 	vim.api.nvim_command("hi FlashLabel guibg=#A25772 guifg=#EEF5FF")
 end
 
-local function toggleGutterBlame()
+local function toggleBufferByFiletype(filetype, action)
 	for _, win in ipairs(vim.api.nvim_list_wins()) do
 		local buf = vim.api.nvim_win_get_buf(win)
-		local ft = vim.api.nvim_buf_get_option(buf, "filetype")
-		if ft == "fugitiveblame" then
+		if vim.api.nvim_buf_get_option(buf, "filetype") == filetype then
 			vim.api.nvim_win_close(win, false)
 			return
 		end
 	end
-	vim.cmd("Git blame")
+	if type(action) == "function" then action() else vim.cmd(action) end
 end
+
+local toggleGitStatus = function() toggleBufferByFiletype("fugitive", "Git") end
+local toggleGutterBlame = function() toggleBufferByFiletype("fugitiveblame", "Git blame") end
 
 return {
 	{
@@ -50,7 +52,7 @@ return {
 				toggleGutterBlame,
 				desc = "Toggle Git blame",
 			},
-			{ "<leader>gs", "<cmd>Git<cr>", desc = "Git status" },
+			{ "<leader>gs", toggleGitStatus, desc = "Toggle Git status" },
 		},
 		cmd = { "Gedit", "Git", "Gsplit" },
 	},
