@@ -18,11 +18,19 @@ local function toggleBufferByFiletype(filetype, action)
 			return
 		end
 	end
-	if type(action) == "function" then action() else vim.cmd(action) end
+	if type(action) == "function" then
+		action()
+	else
+		vim.cmd(action)
+	end
 end
 
-local toggleGitStatus = function() toggleBufferByFiletype("fugitive", "Git") end
-local toggleGutterBlame = function() toggleBufferByFiletype("fugitiveblame", "Git blame") end
+local toggleGitStatus = function()
+	toggleBufferByFiletype("fugitive", "Git")
+end
+local toggleGutterBlame = function()
+	toggleBufferByFiletype("fugitiveblame", "Git blame")
+end
 
 return {
 	{
