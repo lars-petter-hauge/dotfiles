@@ -111,6 +111,31 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		opts = {
+			diagnostics = {
+				virtual_text = {
+					spacing = 4,
+					source = "if_many",
+					current_line = false,
+					-- Only display diagnostic code (e.g. [no-matching-overload]) on lines other than current line
+					-- Otherwise information on multiple lines typically hides the second message. All info is shown
+					-- when cursor is on current line
+					prefix = function(diagnostic)
+						if diagnostic.code then
+							return " ● [" .. diagnostic.code .. "]"
+						end
+						return "●"
+					end,
+					format = function(diagnostic)
+						if diagnostic.code then
+							return ""
+						end
+						return diagnostic.message:match("^([^\n]+)")
+					end,
+				},
+				virtual_lines = {
+					current_line = true,
+				},
+			},
 			servers = {
 				lua_ls = {
 					settings = {
