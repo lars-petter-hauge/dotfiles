@@ -136,6 +136,9 @@ return {
 					current_line = true,
 				},
 			},
+			inlay_hints = {
+				enabled = false,
+			},
 			servers = {
 				lua_ls = {
 					settings = {
