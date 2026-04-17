@@ -203,4 +203,28 @@ return {
 			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
 		},
 	},
+	{
+		"folke/noice.nvim",
+		opts = function()
+			local sig_size = { max_height = math.floor(vim.o.lines * 0.5) }
+
+			-- The floating window for showing docstring often overwhelm the screen if
+			-- the screen is small or the docstring is large. We make it dynamic instead
+			vim.api.nvim_create_autocmd("VimResized", {
+				callback = function()
+					sig_size.max_height = math.floor(vim.o.lines * 0.5)
+				end,
+			})
+
+			return {
+				lsp = {
+					signature = {
+						opts = {
+							size = sig_size,
+						},
+					},
+				},
+			}
+		end,
+	},
 }
