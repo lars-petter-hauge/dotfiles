@@ -156,7 +156,11 @@ return {
 					autostart = false,
 				},
 				ruff = {
-					autostart = false,
+					init_options = {
+						settings = {
+							showSyntaxErrors = false,
+						},
+					},
 				},
 			},
 		},
