@@ -12,6 +12,7 @@ files=("
   .config/nvim
   .config/starship.toml
   .copilot/copilot-instructions.md
+  .copilot/lsp-config.json
 ")
 
 # The idea is that install.sh should not remove any existing files.
