@@ -1,9 +1,9 @@
 {
   "lspServers": {
     "python": {
-      "command": "ty",
+      "command": "pyright-langserver",
       "args": [
-        "server"
+        "--stdio"
       ],
       "fileExtensions": {
         ".py": "python",
