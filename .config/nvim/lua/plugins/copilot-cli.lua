@@ -88,8 +88,7 @@ local function show_context_input(selection, on_submit)
 		on_submit(prompt)
 	end, { buffer = buf, desc = "Send to Copilot" })
 
-	-- Cancel with Esc
-	vim.keymap.set({ "n", "i" }, "<Esc>", function()
+	vim.keymap.set({ "n", "i" }, "<C-q>", function()
 		vim.api.nvim_win_close(win, true)
 	end, { buffer = buf, desc = "Cancel" })
 
