@@ -110,6 +110,15 @@ function M.history_search(opts)
 	-- Store query for preview access
 	local current_query = ""
 
+	local actions = require("fzf-lua.actions")
+	opts.actions = opts.actions or {}
+	opts.actions["alt-a"] = {
+		fn = function(_, o)
+			actions.toggle_opt(o, "search_all")
+		end,
+		header = "Include all (reflog)",
+	}
+
 	-- Custom preview that shows commit header + matching hunks
 	opts.preview = {
 		type = "cmd",
@@ -150,7 +159,10 @@ function M.history_search(opts)
 		if query == "" then
 			return "echo ''"
 		end
-		return "git log -S"
+		local all_flag = opts.search_all and " --all --reflog" or ""
+		return "git log"
+			.. all_flag
+			.. " -S"
 			.. vim.fn.shellescape(query)
 			.. " --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'"
 	end, opts)
