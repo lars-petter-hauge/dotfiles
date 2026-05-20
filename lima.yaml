@@ -1,0 +1,42 @@
+images:
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-arm64.img"
+    arch: "aarch64"
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+    arch: "x86_64"
+
+mounts:
+  - location: "~/GitProjects"
+    writable: true
+
+containerd:
+  system: false
+  user: false
+
+provision:
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -e
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update && apt-get install -y \
+        git curl wget sudo locales build-essential \
+        openssh-client ca-certificates docker.io docker-compose-v2
+      locale-gen en_US.UTF-8
+
+  - mode: user
+    script: |
+      #!/bin/bash
+      set -e
+      sudo usermod -aG docker "$USER"
+      NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      DOTFILES="$HOME/GitProjects/dotfiles"
+      brew bundle install --file="$DOTFILES/Brewfile"
+      cd "$DOTFILES" && ./install.sh
+      sudo chsh -s /home/linuxbrew/.linuxbrew/bin/zsh "$USER"
+
+hostResolver:
+  enabled: true
+
+ssh:
+  forwardAgent: true

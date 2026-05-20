@@ -17,21 +17,16 @@ function rf() {
     bash "$(dirname "$(readlink "$HOME/.alias")")/ripfzf.sh"
 }
 
-# Dev container
+# Dev environment (Lima VM)
 function dev() {
-  if ! docker image inspect devimage:latest >/dev/null 2>&1; then
-    echo "devimage not found, building..."
+  if ! limactl list --json 2>/dev/null | grep -q '"name":"dev"'; then
+    echo "Lima VM 'dev' not found. Creating..."
     local dotfiles_dir="$(dirname "$(readlink "$HOME/.alias")")"
-    docker build -f "$dotfiles_dir/Dockerfile.dev" -t devimage "$dotfiles_dir" || return 1
+    limactl start "$dotfiles_dir/lima.yaml" --name dev || return 1
   fi
-  if [[ "$(uname)" == "Darwin" ]]; then
-    ssh_args="--mount type=bind,src=/run/host-services/ssh-auth.sock,target=/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent"
-  else
-    ssh_args="-v $SSH_AUTH_SOCK:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent"
+  local vm_status=$(limactl list --json 2>/dev/null | grep '"name":"dev"' | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+  if [[ "$vm_status" != "Running" ]]; then
+    limactl start dev
   fi
-  docker run -it --rm \
-    -v "$PWD":/workspace \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    $ssh_args \
-    -w /workspace devimage /bin/bash -lc tmux
+  limactl shell dev -- /home/linuxbrew/.linuxbrew/bin/tmux new-session -A -s main
 }

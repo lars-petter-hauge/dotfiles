@@ -16,7 +16,16 @@ cd dotfiles
 ./install.sh
 ```
 
-## Use case for docker devlopment
+## Lima VM
 
-This repo is designed to use all files also within a docker dev environment. The alias dev will take
-you into the docker container directly, with current working directory mounted.
+A Lima-based Linux VM provides an isolated dev environment with native Docker.
+Works on both macOS and Linux (QEMU).
+
+```
+brew install lima
+source .alias
+dev
+```
+
+The `dev` function creates/starts the VM on first run and attaches to a tmux session.
+Provisioning installs Homebrew, Brewfile packages, and symlinks dotfiles automatically.
