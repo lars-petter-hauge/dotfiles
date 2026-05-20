@@ -36,10 +36,12 @@ for file in "${files[@]}"; do
   echo "Linked $file"
 done
 
-if [ -d "$HOME/.tmux/plugins/tpm" ]; then
-  echo "Installing tmux plugins..."
-  ~/.tmux/plugins/tpm/bin/install_plugins || true
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 fi
+
+echo "Installing tmux plugins..."
+~/.tmux/plugins/tpm/bin/install_plugins || true
 
 echo "Installing nvim plugins (headless)..."
 nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
