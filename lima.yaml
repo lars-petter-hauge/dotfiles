@@ -30,6 +30,7 @@ provision:
       sudo usermod -aG docker "$USER"
       NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      git clone https://github.com/lars-petter-hauge/dotfiles "$HOME/GitProjects/dotfiles"
       DOTFILES="$HOME/GitProjects/dotfiles"
       brew bundle install --file="$DOTFILES/Brewfile"
       cd "$DOTFILES" && ./install.sh
