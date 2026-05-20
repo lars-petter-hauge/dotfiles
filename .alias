@@ -28,5 +28,5 @@ function dev() {
   if [[ "$vm_status" != "Running" ]]; then
     limactl start dev
   fi
-  limactl shell dev -- /home/linuxbrew/.linuxbrew/bin/tmux new-session -A -s main
+  limactl shell dev -- env SHELL=/home/linuxbrew/.linuxbrew/bin/zsh /home/linuxbrew/.linuxbrew/bin/tmux new-session -A -s main
 }
