@@ -29,5 +29,9 @@ function dev() {
   else
     ssh_args="-v $SSH_AUTH_SOCK:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent"
   fi
-  docker run -it --rm -v "$PWD":/workspace $ssh_args -w /workspace devimage /bin/bash -lc tmux
+  docker run -it --rm \
+    -v "$PWD":/workspace \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    $ssh_args \
+    -w /workspace devimage /bin/bash -lc tmux
 }
