@@ -16,3 +16,18 @@ alias glog="git log --graph --color=always --format=\"%C(auto)%h%d %s %C(green)%
 function rf() {
     bash "$(dirname "$(readlink "$HOME/.alias")")/ripfzf.sh"
 }
+
+# Dev container
+function dev() {
+  if ! docker image inspect devimage:latest >/dev/null 2>&1; then
+    echo "devimage not found, building..."
+    local dotfiles_dir="$(dirname "$(readlink "$HOME/.alias")")"
+    docker build -f "$dotfiles_dir/Dockerfile.dev" -t devimage "$dotfiles_dir" || return 1
+  fi
+  if [[ "$(uname)" == "Darwin" ]]; then
+    ssh_args="--mount type=bind,src=/run/host-services/ssh-auth.sock,target=/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent"
+  else
+    ssh_args="-v $SSH_AUTH_SOCK:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent"
+  fi
+  docker run -it --rm -v "$PWD":/workspace $ssh_args -w /workspace devimage /bin/bash -lc tmux
+}

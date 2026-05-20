@@ -1,0 +1,49 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    sudo \
+    locales \
+    build-essential \
+    openssh-client \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+
+RUN usermod -l dev -d /home/dev -m ubuntu \
+    && groupmod -n dev ubuntu \
+    && echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/dev
+
+USER dev
+WORKDIR /home/dev
+
+RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+
+COPY --chown=dev:dev Brewfile /tmp/Brewfile
+RUN brew bundle install --file=/tmp/Brewfile \
+    && rm /tmp/Brewfile \
+    && brew cleanup --prune=all
+
+RUN sudo chsh -s /home/linuxbrew/.linuxbrew/bin/zsh dev
+
+RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+COPY --chown=dev:dev . /home/dev/dotfiles
+RUN cd ~/dotfiles && ./install.sh
+
+ENTRYPOINT ["/home/dev/dotfiles/entrypoint.sh"]
+
+ENV TERM=xterm-256color
+ENV COLORTERM=truecolor
+ENV SHELL=/home/linuxbrew/.linuxbrew/bin/zsh
+
+CMD ["/home/linuxbrew/.linuxbrew/bin/zsh"]
