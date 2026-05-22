@@ -162,6 +162,9 @@ return {
 						},
 					},
 				},
+				ts_ls = {
+					autostart = true,
+				},
 			},
 		},
 	},
