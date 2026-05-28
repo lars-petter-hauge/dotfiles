@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+trap 'echo "Warning: error on line $LINENO: $BASH_COMMAND" >&2' ERR
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
