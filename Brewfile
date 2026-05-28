@@ -1,7 +1,7 @@
 brew "bzip2"
 brew "azure-cli"
 brew "zstd"
-brew "copilot-cli"
+cask "copilot-cli"
 brew "podman"
 brew "pre-commit"
 brew "cmake"
