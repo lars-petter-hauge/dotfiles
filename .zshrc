@@ -21,6 +21,7 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 # Source additional files; alias, post-rc
 if [ -f $HOME/.alias ]; then source $HOME/.alias; fi
+if command -v limactl &>/dev/null && [ -f $HOME/.lima-helpers ]; then source $HOME/.lima-helpers; fi
 
 if [ -f $HOME/.post-rc ]; then source $HOME/.post-rc; fi
 

@@ -6,6 +6,7 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 files=(
   .gitconfig
   .alias
+  .lima-helpers
   .zshrc
   .tmux.conf
   .config/nvim
