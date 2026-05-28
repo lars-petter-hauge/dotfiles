@@ -23,6 +23,19 @@ function dev() {
     echo "Lima VM 'dev' not found. Creating..."
     local dotfiles_dir="$(dirname "$(readlink "$HOME/.alias")")"
     limactl start "$dotfiles_dir/lima.yaml" --name dev || return 1
+
+    echo ""
+    echo "Please provide a fine-grained token scoped to Copilot."
+    echo "Create one at: https://github.com/settings/personal-access-tokens/new"
+    echo ""
+    read -rs "gh_token?GH_TOKEN: "
+    echo ""
+    if [[ -n "$gh_token" ]]; then
+      limactl shell dev -- bash -c "echo 'export GH_TOKEN=${gh_token}' >> /home/lima.guest/.post-rc"
+      echo "✓ GH_TOKEN written to VM's .post-rc"
+    else
+      echo "⚠ No token provided. Add GH_TOKEN to .post-rc manually later."
+    fi
   fi
   local vm_status=$(limactl list --json 2>/dev/null | grep '"name":"dev"' | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
   if [[ "$vm_status" != "Running" ]]; then
