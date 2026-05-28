@@ -43,6 +43,15 @@ fi
 echo "Installing tmux plugins..."
 ~/.tmux/plugins/tpm/bin/install_plugins || true
 
+# nordtheme/tmux's nord.tmux script uses BASH_SOURCE but ships without a
+# shebang. On Linux, tmux's run-shell uses /bin/sh (dash) which doesn't
+# support BASH_SOURCE, causing the theme to silently fail to load.
+# macOS is unaffected so we only patch on Linux.
+nord_tmux="$HOME/.tmux/plugins/tmux/nord.tmux"
+if [ "$(uname)" = "Linux" ] && [ -f "$nord_tmux" ] && ! head -1 "$nord_tmux" | grep -q '^#!'; then
+  sed -i '1i#!/usr/bin/env bash' "$nord_tmux"
+fi
+
 echo "Installing nvim plugins (headless)..."
 nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
 
