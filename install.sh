@@ -56,6 +56,6 @@ if [ "$(uname)" = "Linux" ] && [ -f "$nord_tmux" ] && ! head -1 "$nord_tmux" | g
 fi
 
 echo "Installing nvim plugins (headless)..."
-nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
+nvim --headless "+Lazy! restore" +qa 2>/dev/null || true
 
 echo "Dotfiles installed."
