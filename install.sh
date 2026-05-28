@@ -41,7 +41,9 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
 fi
 
 echo "Installing tmux plugins..."
+tmux start-server && tmux new-session -d -s _install 2>/dev/null
 ~/.tmux/plugins/tpm/bin/install_plugins || true
+tmux kill-server 2>/dev/null || true
 
 # nordtheme/tmux's nord.tmux script uses BASH_SOURCE but ships without a
 # shebang. On Linux, tmux's run-shell uses /bin/sh (dash) which doesn't
