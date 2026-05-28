@@ -58,7 +58,7 @@ provision:
       DOTFILES="$HOME/GitProjects/dotfiles"
       mkdir -p "$HOME/GitProjects"
       git clone -b "${DOTFILES_REF:-main}" https://github.com/lars-petter-hauge/dotfiles.git "$DOTFILES"
-      brew bundle install --file="$DOTFILES/Brewfile"
+      brew bundle install --file="$DOTFILES/Brewfile" || true
       cd "$DOTFILES" && ./install.sh
       sudo chsh -s /home/linuxbrew/.linuxbrew/bin/zsh "$(whoami)"
 
