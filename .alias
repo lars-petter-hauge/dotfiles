@@ -43,3 +43,77 @@ function dev() {
   fi
   limactl shell --workdir /home/lima.guest dev -- /home/linuxbrew/.linuxbrew/bin/zsh -lc "SHELL=/home/linuxbrew/.linuxbrew/bin/zsh tmux new-session -A -s main"
 }
+
+function dev-add-deploy-key() {
+  local repo_url="$1"
+  if [[ -z "$repo_url" ]]; then
+    echo "Usage: dev-add-deploy-key git@github.com:owner/repo.git"
+    return 1
+  fi
+
+  local owner_repo="${repo_url#git@github.com:}"
+  owner_repo="${owner_repo%.git}"
+  local owner="${owner_repo%%/*}"
+  local repo="${owner_repo##*/}"
+  local key_name="deploy_${owner}_${repo}"
+  local ssh_host="github-${owner}-${repo}"
+  local tmp_key="/tmp/${key_name}"
+
+  ssh-keygen -t ed25519 -f "$tmp_key" -N "" -q -C "dev-deploy-key-${owner}/${repo}"
+
+  local response
+  response=$(gh api "repos/${owner}/${repo}/keys" \
+    -f title="lima-dev-$(date +%Y%m%d%H%M%S)" \
+    -f key="$(cat "${tmp_key}.pub")" \
+    -f read_only=false 2>&1)
+
+  if [[ $? -ne 0 ]]; then
+    echo "✗ Failed to add deploy key: $response"
+    rm -f "$tmp_key" "${tmp_key}.pub"
+    return 1
+  fi
+
+  limactl copy "$tmp_key" dev:/home/lima.guest/.ssh/"$key_name"
+  limactl shell dev -- chmod 600 /home/lima.guest/.ssh/"$key_name"
+  limactl shell dev -- bash -c "cat >> /home/lima.guest/.ssh/config" <<EOF
+
+Host ${ssh_host}
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/${key_name}
+  IdentitiesOnly yes
+EOF
+
+  rm -f "$tmp_key" "${tmp_key}.pub"
+
+  echo "✓ Deploy key added for ${owner}/${repo}"
+  echo "Clone inside VM with:"
+  echo "  git clone git@${ssh_host}:${owner}/${repo}.git"
+}
+
+function dev-revoke-deploy-key() {
+  local repo_url="$1"
+  if [[ -z "$repo_url" ]]; then
+    echo "Usage: dev-revoke-deploy-key git@github.com:owner/repo.git"
+    return 1
+  fi
+
+  local owner_repo="${repo_url#git@github.com:}"
+  owner_repo="${owner_repo%.git}"
+  local owner="${owner_repo%%/*}"
+  local repo="${owner_repo##*/}"
+  local key_name="deploy_${owner}_${repo}"
+  local ssh_host="github-${owner}-${repo}"
+
+  local key_ids
+  key_ids=$(gh api "repos/${owner}/${repo}/keys" --jq '.[] | select(.title | startswith("lima-dev-")) | .id')
+
+  for kid in $key_ids; do
+    gh api "repos/${owner}/${repo}/keys/${kid}" -X DELETE --silent
+  done
+
+  limactl shell dev -- rm -f /home/lima.guest/.ssh/"$key_name"
+  limactl shell dev -- sed -i "/Host ${ssh_host}/,/IdentitiesOnly yes/d" /home/lima.guest/.ssh/config
+
+  echo "✓ Deploy key revoked for ${owner}/${repo}"
+}
