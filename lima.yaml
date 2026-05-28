@@ -61,6 +61,7 @@ provision:
       brew bundle install --file="$DOTFILES/Brewfile" || true
       cd "$DOTFILES" && ./install.sh
       sudo chsh -s /home/linuxbrew/.linuxbrew/bin/zsh "$(whoami)"
+      echo 'PATH="$PATH:/usr/sbin:/sbin"' >> "$HOME/.post-rc"
 
 # Resolve host.lima.internal to the macOS host (for accessing host services).
 hostResolver:
