@@ -5,13 +5,6 @@ images:
   - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
     arch: "x86_64"
 
-# Share host ~/GitProjects into the VM at the user's home directory.
-# Writable so code edits in the VM reflect on the host and vice versa.
-mounts:
-  - location: "~/GitProjects"
-    mountPoint: "/home/lima.guest/GitProjects"
-    writable: true
-
 # Disable Lima's built-in containerd — we use rootless Docker instead.
 containerd:
   system: false
@@ -61,6 +54,8 @@ provision:
       NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       DOTFILES="$HOME/GitProjects/dotfiles"
+      mkdir -p "$HOME/GitProjects"
+      git clone -b "${DOTFILES_REF:-main}" https://github.com/lars-petter-hauge/dotfiles.git "$DOTFILES"
       brew bundle install --file="$DOTFILES/Brewfile"
       cd "$DOTFILES" && ./install.sh
       sudo chsh -s /home/linuxbrew/.linuxbrew/bin/zsh "$(whoami)"
