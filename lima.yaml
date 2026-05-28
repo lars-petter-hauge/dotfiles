@@ -66,6 +66,5 @@ provision:
 hostResolver:
   enabled: true
 
-# Forward SSH agent so git/gh commands in the VM use host SSH keys.
 ssh:
-  forwardAgent: true
+  forwardAgent: false
