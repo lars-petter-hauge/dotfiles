@@ -12,6 +12,10 @@ containerd:
   system: false
   user: false
 
+cpus: 8
+
+memory: 16GB
+
 provision:
   # System provisioning (runs as root).
   # Installs base packages and configures AppArmor for rootless Docker.
