@@ -41,6 +41,21 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
   git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 fi
 
+THUMBS_DIR="$HOME/.tmux/plugins/tmux-thumbs"
+if [ ! -d "$THUMBS_DIR" ]; then
+  git clone https://github.com/fcsonline/tmux-thumbs "$THUMBS_DIR"
+fi
+
+if [ ! -f "$THUMBS_DIR/target/release/tmux-thumbs" ]; then
+  echo "Compiling tmux-thumbs..."
+  CARGO=$(rustup which cargo 2>/dev/null || command -v cargo 2>/dev/null)
+  if [ -z "$CARGO" ]; then
+    echo "Warning: cargo not found, skipping tmux-thumbs compile"
+  else
+    (cd "$THUMBS_DIR" && "$CARGO" build --release)
+  fi
+fi
+
 echo "Installing tmux plugins..."
 tmux start-server && tmux new-session -d -s _install 2>/dev/null
 ~/.tmux/plugins/tpm/bin/install_plugins || true
