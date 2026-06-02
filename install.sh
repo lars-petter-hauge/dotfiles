@@ -1,6 +1,8 @@
 #!/bin/bash
 trap 'echo "Warning: error on line $LINENO: $BASH_COMMAND" >&2' ERR
 
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv 2>/dev/null || /opt/homebrew/bin/brew shellenv 2>/dev/null)" 2>/dev/null
+
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 files=(
