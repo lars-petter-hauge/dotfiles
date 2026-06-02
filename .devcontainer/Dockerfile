@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/base:ubuntu
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
 COPY Brewfile /tmp/Brewfile
 COPY install-nvim-plugins.sh /tmp/install-nvim-plugins.sh
