@@ -1,25 +1,17 @@
 function dcup() {
   local ws="${1:-.}"
   ws="$(cd "$ws" && pwd)"
-
-  local extra_mounts=(
-    "--mount" "type=volume,source=devcontainer-ssh,target=/home/vscode/.ssh"
-    "--mount" "type=volume,source=devcontainer-cargo-registry,target=/home/vscode/.cargo/registry"
-    "--mount" "type=volume,source=devcontainer-pip-cache,target=/home/vscode/.cache/pip"
-    "--mount" "type=volume,source=devcontainer-npm-cache,target=/home/vscode/.npm"
-    "--mount" "type=volume,source=devcontainer-nvim-data,target=/home/vscode/.local/share/nvim"
-  )
+  local overrides="$HOME/.devcontainer/mounts.json"
 
   if [ -f "$ws/.devcontainer/devcontainer.json" ] || [ -f "$ws/.devcontainer.json" ]; then
     devcontainer up --workspace-folder "$ws" \
       --dotfiles-repository https://github.com/lars-petter-hauge/dotfiles \
       --dotfiles-install-command ./install.sh \
-      "${extra_mounts[@]}"
+      --override-config "$overrides"
   else
     local fallback="$HOME/.devcontainer/devcontainer.json"
     devcontainer up --workspace-folder "$ws" \
-      --config "$fallback" \
-      "${extra_mounts[@]}"
+      --config "$fallback"
   fi
 }
 
