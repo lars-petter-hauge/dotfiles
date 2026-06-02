@@ -7,6 +7,8 @@ files=(
   .gitconfig
   .alias
   .lima-helpers
+  .devcontainer-helpers
+  .devcontainer
   .zshrc
   .tmux.conf
   .config/nvim

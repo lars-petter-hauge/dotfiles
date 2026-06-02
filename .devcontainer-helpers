@@ -1,0 +1,134 @@
+function dcup() {
+  local ws="${1:-.}"
+  ws="$(cd "$ws" && pwd)"
+
+  local extra_mounts=(
+    "--mount" "source=devcontainer-ssh,target=/home/vscode/.ssh,type=volume"
+    "--mount" "source=devcontainer-cargo-registry,target=/home/vscode/.cargo/registry,type=volume"
+    "--mount" "source=devcontainer-pip-cache,target=/home/vscode/.cache/pip,type=volume"
+    "--mount" "source=devcontainer-npm-cache,target=/home/vscode/.npm,type=volume"
+    "--mount" "source=devcontainer-nvim-data,target=/home/vscode/.local/share/nvim,type=volume"
+  )
+
+  if [ -f "$ws/.devcontainer/devcontainer.json" ] || [ -f "$ws/.devcontainer.json" ]; then
+    devcontainer up --workspace-folder "$ws" \
+      --dotfiles-repository https://github.com/lars-petter-hauge/dotfiles \
+      --dotfiles-install-command ./install.sh \
+      "${extra_mounts[@]}"
+  else
+    local fallback="$HOME/.devcontainer/devcontainer.json"
+    devcontainer up --workspace-folder "$ws" \
+      --config "$fallback" \
+      "${extra_mounts[@]}"
+  fi
+}
+
+function dcexec() {
+  local ws="${1:-.}"
+  ws="$(cd "$ws" && pwd)"
+  devcontainer exec --workspace-folder "$ws" zsh -l
+}
+
+function dcdown() {
+  local ws="${1:-.}"
+  ws="$(cd "$ws" && pwd)"
+  local container_id
+  container_id=$(devcontainer up --workspace-folder "$ws" 2>/dev/null | jq -r '.containerId // empty')
+  if [[ -n "$container_id" ]]; then
+    docker rm -f "$container_id"
+  fi
+}
+
+function dc-add-deploy-key() {
+  local repo_url="$1"
+  if [[ -z "$repo_url" ]]; then
+    echo "Usage: dc-add-deploy-key git@github.com:owner/repo.git"
+    return 1
+  fi
+
+  local owner_repo="${repo_url#git@github.com:}"
+  owner_repo="${owner_repo%.git}"
+  local owner="${owner_repo%%/*}"
+  local repo="${owner_repo##*/}"
+  local key_name="deploy_${owner}_${repo}"
+  local ssh_host="github-${owner}-${repo}"
+  local tmp_key="/tmp/${key_name}"
+
+  ssh-keygen -t ed25519 -f "$tmp_key" -N "" -q -C "dc-deploy-key-${owner}/${repo}"
+
+  local response
+  response=$(gh api "repos/${owner}/${repo}/keys" \
+    -f title="devcontainer-$(date +%Y%m%d%H%M%S)" \
+    -f key="$(cat "${tmp_key}.pub")" \
+    -f read_only=false 2>&1)
+
+  if [[ $? -ne 0 ]]; then
+    echo "✗ Failed to add deploy key: $response"
+    rm -f "$tmp_key" "${tmp_key}.pub"
+    return 1
+  fi
+
+  local ssh_vol_mount
+  ssh_vol_mount=$(docker volume inspect devcontainer-ssh --format '{{ .Mountpoint }}' 2>/dev/null)
+
+  if [[ -z "$ssh_vol_mount" ]]; then
+    docker volume create devcontainer-ssh
+  fi
+
+  local helper_container="dc-ssh-helper-$$"
+  docker run --rm -d --name "$helper_container" \
+    -v devcontainer-ssh:/ssh alpine sleep 30 >/dev/null
+
+  docker cp "$tmp_key" "$helper_container:/ssh/$key_name"
+  docker exec "$helper_container" chmod 600 "/ssh/$key_name"
+
+  local ssh_config_entry="
+Host ${ssh_host}
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/${key_name}
+  IdentitiesOnly yes
+"
+  docker exec "$helper_container" sh -c "echo '$ssh_config_entry' >> /ssh/config"
+  docker exec "$helper_container" chmod 600 /ssh/config
+
+  docker stop "$helper_container" >/dev/null 2>&1 || true
+  rm -f "$tmp_key" "${tmp_key}.pub"
+
+  echo "✓ Deploy key added for ${owner}/${repo}"
+  echo "Clone inside devcontainer with:"
+  echo "  git clone git@${ssh_host}:${owner}/${repo}.git"
+}
+
+function dc-revoke-deploy-key() {
+  local repo_url="$1"
+  if [[ -z "$repo_url" ]]; then
+    echo "Usage: dc-revoke-deploy-key git@github.com:owner/repo.git"
+    return 1
+  fi
+
+  local owner_repo="${repo_url#git@github.com:}"
+  owner_repo="${owner_repo%.git}"
+  local owner="${owner_repo%%/*}"
+  local repo="${owner_repo##*/}"
+  local key_name="deploy_${owner}_${repo}"
+  local ssh_host="github-${owner}-${repo}"
+
+  local key_ids
+  key_ids=$(gh api "repos/${owner}/${repo}/keys" --jq '.[] | select(.title | startswith("devcontainer-")) | .id')
+
+  for kid in $key_ids; do
+    gh api "repos/${owner}/${repo}/keys/${kid}" -X DELETE --silent
+  done
+
+  local helper_container="dc-ssh-helper-$$"
+  docker run --rm -d --name "$helper_container" \
+    -v devcontainer-ssh:/ssh alpine sleep 30 >/dev/null
+
+  docker exec "$helper_container" rm -f "/ssh/$key_name"
+  docker exec "$helper_container" sed -i "/Host ${ssh_host}/,/IdentitiesOnly yes/d" /ssh/config
+
+  docker stop "$helper_container" >/dev/null 2>&1 || true
+
+  echo "✓ Deploy key revoked for ${owner}/${repo}"
+}
