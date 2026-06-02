@@ -11,7 +11,9 @@ function dcup() {
   else
     local fallback="$HOME/.devcontainer/devcontainer.json"
     devcontainer up --workspace-folder "$ws" \
-      --config "$fallback"
+      --config "$fallback" \
+      --dotfiles-repository https://github.com/lars-petter-hauge/dotfiles \
+      --dotfiles-install-command ./install.sh
   fi
 }
 
