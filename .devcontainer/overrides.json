@@ -1,4 +1,7 @@
 {
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
   "mounts": [
     "type=volume,source=devcontainer-ssh,target=/home/vscode/.ssh",
     "type=volume,source=devcontainer-cargo-registry,target=/home/vscode/.cargo/registry",

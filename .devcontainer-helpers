@@ -1,7 +1,7 @@
 function dcup() {
   local ws="${1:-.}"
   ws="$(cd "$ws" && pwd)"
-  local overrides="$HOME/.devcontainer/mounts.json"
+  local overrides="$HOME/.devcontainer/overrides.json"
 
   if [ -f "$ws/.devcontainer/devcontainer.json" ] || [ -f "$ws/.devcontainer.json" ]; then
     devcontainer up --workspace-folder "$ws" \
