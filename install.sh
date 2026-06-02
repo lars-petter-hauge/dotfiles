@@ -4,6 +4,10 @@ trap 'echo "Warning: error on line $LINENO: $BASH_COMMAND" >&2' ERR
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv 2>/dev/null || /opt/homebrew/bin/brew shellenv 2>/dev/null)" 2>/dev/null
 export PATH="$(brew --prefix rustup 2>/dev/null)/bin:$HOME/.cargo/bin:$PATH"
 
+if command -v sudo &>/dev/null; then
+  sudo chown -R "$(id -u):$(id -g)" "$HOME/.cargo" "$HOME/.cache" "$HOME/.npm" "$HOME/.local" "$HOME/.ssh" 2>/dev/null || true
+fi
+
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 files=(

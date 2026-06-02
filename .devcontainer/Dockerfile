@@ -9,5 +9,9 @@ RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.co
 
 RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" \
     && rustup default stable
+
+RUN mkdir -p /home/vscode/.cargo/registry /home/vscode/.cache/pip /home/vscode/.npm /home/vscode/.local/share/nvim /home/vscode/.ssh \
+    && chown -R vscode:vscode /home/vscode/.cargo /home/vscode/.cache /home/vscode/.npm /home/vscode/.local /home/vscode/.ssh \
+    && chmod 700 /home/vscode/.ssh
 USER root
 RUN rm /tmp/Brewfile
