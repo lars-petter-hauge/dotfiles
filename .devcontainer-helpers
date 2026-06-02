@@ -31,9 +31,11 @@ function dcdown() {
   local ws="${1:-.}"
   ws="$(cd "$ws" && pwd)"
   local container_id
-  container_id=$(devcontainer up --workspace-folder "$ws" 2>/dev/null | jq -r '.containerId // empty')
+  container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
   if [[ -n "$container_id" ]]; then
     docker rm -f "$container_id"
+  else
+    echo "No running devcontainer found for $ws"
   fi
 }
 
