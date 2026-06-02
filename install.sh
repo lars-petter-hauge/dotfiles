@@ -2,6 +2,7 @@
 trap 'echo "Warning: error on line $LINENO: $BASH_COMMAND" >&2' ERR
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv 2>/dev/null || /opt/homebrew/bin/brew shellenv 2>/dev/null)" 2>/dev/null
+export PATH="$HOME/.cargo/bin:$PATH"
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
