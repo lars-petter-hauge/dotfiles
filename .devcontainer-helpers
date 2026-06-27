@@ -1,5 +1,8 @@
 function _dc_config_paths() {
   local ws="$1"
+  shift
+  local -a extra_mounts=("$@")
+
   local config
   if [ -f "$ws/.devcontainer/devcontainer.json" ]; then
     config="$ws/.devcontainer/devcontainer.json"
@@ -31,12 +34,17 @@ function _dc_config_paths() {
       ssh_source="$SSH_AUTH_SOCK"
     fi
 
-    jq -s --arg ctx "$config_dir" --arg ssh "$ssh_source" '
+    local extra_mounts_json="[]"
+    if (( ${#extra_mounts[@]} > 0 )); then
+      extra_mounts_json=$(printf '%s\n' "${extra_mounts[@]}" | jq -R '[inputs // empty | "type=bind,source=\(.),target=\(.)"]' 2>/dev/null || echo "[]")
+    fi
+
+    jq -s --arg ctx "$config_dir" --arg ssh "$ssh_source" --argjson extra "$extra_mounts_json" '
       .[0] as $base
       | .[1] as $overlay
       | $base * $overlay
       | .features = (($base.features // {}) * ($overlay.features // {}))
-      | .mounts = (($base.mounts // []) + ($overlay.mounts // []) | unique)
+      | .mounts = (($base.mounts // []) + ($overlay.mounts // []) + $extra | unique)
       | if $ssh != "" then .mounts += ["type=bind,source=\($ssh),target=/ssh-agent"] | .containerEnv.SSH_AUTH_SOCK = "/ssh-agent" | .postStartCommand = "sudo chmod 666 /ssh-agent" else . end
       | .customizations.vscode.extensions = (($base.customizations.vscode.extensions // []) + ($overlay.customizations.vscode.extensions // []) | unique)
       | if .build then .build.context = $ctx | .build.dockerfile = ($ctx + "/" + .build.dockerfile) else . end
@@ -61,12 +69,16 @@ tmux new-session -A -s main
 EOF
 }
 
+# Build and start a devcontainer for the given workspace.
+# Additional arguments are paths to extra projects mounted into the container.
 function dcup() {
   local ws="${1:-.}"
   ws="$(cd "$ws" && pwd)"
+  shift 2>/dev/null || true
+  local -a extra=("$@")
 
   local -a config_paths
-  config_paths=("${(@f)$(_dc_config_paths "$ws")}") || return 1
+  config_paths=("${(@f)$(_dc_config_paths "$ws" "${extra[@]}")}") || return 1
   local merged_config="${config_paths[1]}"
   local generated_config="${config_paths[2]}"
 
@@ -84,16 +96,36 @@ function dcup() {
   return $exit_code
 }
 
+# Enter a devcontainer, creating it if needed.
+# Usage:
+#   dev              - use current directory as workspace
+#   dev project      - use project as workspace
+#   dev projA projB  - projA as workspace, projB mounted alongside
 function dev() {
-  local ws="${1:-.}"
-  ws="$(cd "$ws" && pwd)"
+  local ws
+  local -a extra=()
+
+  if (( $# == 0 )); then
+    ws="$(pwd)"
+  else
+    ws="$(cd "$1" && pwd)"
+    shift
+    for arg in "$@"; do
+      extra+=("$(cd "$arg" && pwd)")
+    done
+  fi
 
   local container_id
   container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
   if [[ -z "$container_id" ]]; then
-    dcup "$ws" || return 1
+    dcup "$ws" "${extra[@]}" || return 1
     container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
   fi
+
+  docker exec -u vscode "$container_id" ln -sfn "$ws" "/home/vscode/$(basename "$ws")" 2>/dev/null
+  for p in "${extra[@]}"; do
+    docker exec -u vscode "$container_id" ln -sfn "$p" "/home/vscode/$(basename "$p")" 2>/dev/null
+  done
 
   local tmux_start_command
   tmux_start_command="$(_dc_tmux_start_command)"
