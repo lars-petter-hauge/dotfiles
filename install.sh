@@ -12,7 +12,7 @@ if ! command -v brew &>/dev/null; then
 fi
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv 2>/dev/null || /opt/homebrew/bin/brew shellenv 2>/dev/null)" 2>/dev/null
 
-brew bundle install --file="$DOTFILES_DIR/Brewfile" --no-lock
+brew bundle install --file="$DOTFILES_DIR/Brewfile"
 export PATH="$(brew --prefix rustup 2>/dev/null)/bin:$HOME/.cargo/bin:$PATH"
 
 if command -v sudo &>/dev/null; then
