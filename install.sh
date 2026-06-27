@@ -81,7 +81,7 @@ if [ ! -f "$THUMBS_DIR/target/release/tmux-thumbs" ]; then
 fi
 
 echo "Installing tmux plugins..."
-tmux start-server && tmux new-session -d -s _install 2>/dev/null
+SHELL="$(command -v bash)" tmux start-server \; set -g default-shell "$(command -v bash)" && tmux new-session -d -s _install 2>/dev/null
 ~/.tmux/plugins/tpm/bin/install_plugins || true
 tmux kill-session -t _install 2>/dev/null || true
 
