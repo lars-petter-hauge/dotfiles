@@ -1,33 +1,99 @@
+function _dc_config_paths() {
+  local ws="$1"
+  local config
+  if [ -f "$ws/.devcontainer/devcontainer.json" ]; then
+    config="$ws/.devcontainer/devcontainer.json"
+  elif [ -f "$ws/.devcontainer.json" ]; then
+    config="$ws/.devcontainer.json"
+  else
+    config="$HOME/.devcontainer/devcontainer.json"
+  fi
+
+  local overlay="$HOME/.devcontainer/overlay.json"
+  local merged_config="$config"
+  local tmpdir=""
+  if [ -f "$overlay" ]; then
+    if ! command -v jq >/dev/null; then
+      echo "devcontainer helper: jq is required to merge $overlay" >&2
+      return 1
+    fi
+
+    tmpdir="$(mktemp -d)"
+    merged_config="$tmpdir/devcontainer.json"
+
+    local config_dir
+    config_dir="$(cd "$(dirname "$config")" && pwd)"
+
+    jq -s --arg ctx "$config_dir" '
+      .[0] as $base
+      | .[1] as $overlay
+      | $base * $overlay
+      | .features = (($base.features // {}) * ($overlay.features // {}))
+      | .mounts = (($base.mounts // []) + ($overlay.mounts // []) | unique)
+      | .customizations.vscode.extensions = (($base.customizations.vscode.extensions // []) + ($overlay.customizations.vscode.extensions // []) | unique)
+      | if .build then .build.context = $ctx | .build.dockerfile = ($ctx + "/" + .build.dockerfile) else . end
+    ' "$config" "$overlay" > "$merged_config" || {
+      rm -rf "$tmpdir"
+      return 1
+    }
+  fi
+
+  printf "%s\n%s\n" "$merged_config" "$tmpdir"
+}
+
+
+function _dc_tmux_start_command() {
+  cat <<'EOF'
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv 2>/dev/null || true)"
+export TMPDIR="$PWD/.tmp"
+mkdir -p "$TMPDIR"
+SHELL="$(command -v zsh)"
+tmux set-environment -g TMPDIR "$TMPDIR" 2>/dev/null || true
+tmux new-session -A -s main
+EOF
+}
+
 function dcup() {
   local ws="${1:-.}"
   ws="$(cd "$ws" && pwd)"
-  local overrides="$HOME/.devcontainer/overrides.json"
 
-  if [ -f "$ws/.devcontainer/devcontainer.json" ] || [ -f "$ws/.devcontainer.json" ]; then
-    devcontainer up --workspace-folder "$ws" \
-      --dotfiles-repository https://github.com/lars-petter-hauge/dotfiles \
-      --dotfiles-install-command ./install.sh \
-      --override-config "$overrides"
-  else
-    local fallback="$HOME/.devcontainer/devcontainer.json"
-    devcontainer up --workspace-folder "$ws" \
-      --config "$fallback" \
-      --dotfiles-repository https://github.com/lars-petter-hauge/dotfiles \
-      --dotfiles-install-command ./install.sh
-  fi
+  local -a config_paths
+  config_paths=("${(@f)$(_dc_config_paths "$ws")}") || return 1
+  local merged_config="${config_paths[1]}"
+  local generated_config="${config_paths[2]}"
+
+  echo "Config: $merged_config"
+  read -r "?Press Enter to continue..."
+
+  devcontainer up --workspace-folder "$ws" \
+    --config "$merged_config" \
+    --dotfiles-repository https://github.com/lars-petter-hauge/dotfiles \
+    --dotfiles-install-command ./install.sh
+  local exit_code=$?
+
+  [[ -n "$generated_config" ]] && rm -rf "$generated_config"
+
+  return $exit_code
 }
 
-function dcexec() {
+function dev() {
   local ws="${1:-.}"
   ws="$(cd "$ws" && pwd)"
-  if [ -f "$ws/.devcontainer/devcontainer.json" ] || [ -f "$ws/.devcontainer.json" ]; then
-    devcontainer exec --workspace-folder "$ws" zsh -l
-  else
-    devcontainer exec --workspace-folder "$ws" --config "$HOME/.devcontainer/devcontainer.json" zsh -l
+
+  local container_id
+  container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
+  if [[ -z "$container_id" ]]; then
+    dcup "$ws" || return 1
+    container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
   fi
+
+  local tmux_start_command
+  tmux_start_command="$(_dc_tmux_start_command)"
+
+  docker exec -it -u vscode -w "$(docker inspect -f '{{index .Config.Labels "devcontainer.remote_workspace_folder"}}' "$container_id")" "$container_id" zsh -lc "$tmux_start_command"
 }
 
-function dcdown() {
+function rmdev() {
   local ws="${1:-.}"
   ws="$(cd "$ws" && pwd)"
   local container_id
@@ -39,96 +105,3 @@ function dcdown() {
   fi
 }
 
-function dc-add-deploy-key() {
-  local repo_url="$1"
-  if [[ -z "$repo_url" ]]; then
-    echo "Usage: dc-add-deploy-key git@github.com:owner/repo.git"
-    return 1
-  fi
-
-  local owner_repo="${repo_url#git@github.com:}"
-  owner_repo="${owner_repo%.git}"
-  local owner="${owner_repo%%/*}"
-  local repo="${owner_repo##*/}"
-  local key_name="deploy_${owner}_${repo}"
-  local ssh_host="github-${owner}-${repo}"
-  local tmp_key="/tmp/${key_name}"
-
-  ssh-keygen -t ed25519 -f "$tmp_key" -N "" -q -C "dc-deploy-key-${owner}/${repo}"
-
-  local response
-  response=$(gh api "repos/${owner}/${repo}/keys" \
-    -f title="devcontainer-$(date +%Y%m%d%H%M%S)" \
-    -f key="$(cat "${tmp_key}.pub")" \
-    -f read_only=false 2>&1)
-
-  if [[ $? -ne 0 ]]; then
-    echo "✗ Failed to add deploy key: $response"
-    rm -f "$tmp_key" "${tmp_key}.pub"
-    return 1
-  fi
-
-  local ssh_vol_mount
-  ssh_vol_mount=$(docker volume inspect devcontainer-ssh --format '{{ .Mountpoint }}' 2>/dev/null)
-
-  if [[ -z "$ssh_vol_mount" ]]; then
-    docker volume create devcontainer-ssh
-  fi
-
-  local helper_container="dc-ssh-helper-$$"
-  docker run --rm -d --name "$helper_container" \
-    -v devcontainer-ssh:/ssh alpine sleep 30 >/dev/null
-
-  docker cp "$tmp_key" "$helper_container:/ssh/$key_name"
-  docker exec "$helper_container" chmod 600 "/ssh/$key_name"
-
-  local ssh_config_entry="
-Host ${ssh_host}
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/${key_name}
-  IdentitiesOnly yes
-"
-  docker exec "$helper_container" sh -c "echo '$ssh_config_entry' >> /ssh/config"
-  docker exec "$helper_container" chmod 600 /ssh/config
-
-  docker stop "$helper_container" >/dev/null 2>&1 || true
-  rm -f "$tmp_key" "${tmp_key}.pub"
-
-  echo "✓ Deploy key added for ${owner}/${repo}"
-  echo "Clone inside devcontainer with:"
-  echo "  git clone git@${ssh_host}:${owner}/${repo}.git"
-}
-
-function dc-revoke-deploy-key() {
-  local repo_url="$1"
-  if [[ -z "$repo_url" ]]; then
-    echo "Usage: dc-revoke-deploy-key git@github.com:owner/repo.git"
-    return 1
-  fi
-
-  local owner_repo="${repo_url#git@github.com:}"
-  owner_repo="${owner_repo%.git}"
-  local owner="${owner_repo%%/*}"
-  local repo="${owner_repo##*/}"
-  local key_name="deploy_${owner}_${repo}"
-  local ssh_host="github-${owner}-${repo}"
-
-  local key_ids
-  key_ids=$(gh api "repos/${owner}/${repo}/keys" --jq '.[] | select(.title | startswith("devcontainer-")) | .id')
-
-  for kid in $key_ids; do
-    gh api "repos/${owner}/${repo}/keys/${kid}" -X DELETE --silent
-  done
-
-  local helper_container="dc-ssh-helper-$$"
-  docker run --rm -d --name "$helper_container" \
-    -v devcontainer-ssh:/ssh alpine sleep 30 >/dev/null
-
-  docker exec "$helper_container" rm -f "/ssh/$key_name"
-  docker exec "$helper_container" sed -i "/Host ${ssh_host}/,/IdentitiesOnly yes/d" /ssh/config
-
-  docker stop "$helper_container" >/dev/null 2>&1 || true
-
-  echo "✓ Deploy key revoked for ${owner}/${repo}"
-}
