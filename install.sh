@@ -4,6 +4,7 @@ trap 'echo "Warning: error on line $LINENO: $BASH_COMMAND" >&2' ERR
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 if ! command -v brew &>/dev/null; then
+  mkdir -p "$HOME/.cache"
   NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv 2>/dev/null || /opt/homebrew/bin/brew shellenv 2>/dev/null)" 2>/dev/null
