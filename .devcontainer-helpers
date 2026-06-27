@@ -24,12 +24,20 @@ function _dc_config_paths() {
     local config_dir
     config_dir="$(cd "$(dirname "$config")" && pwd)"
 
-    jq -s --arg ctx "$config_dir" '
+    local ssh_source=""
+    if [[ "$(uname)" == "Darwin" ]]; then
+      ssh_source="/run/host-services/ssh-auth.sock"
+    elif [[ -n "$SSH_AUTH_SOCK" ]]; then
+      ssh_source="$SSH_AUTH_SOCK"
+    fi
+
+    jq -s --arg ctx "$config_dir" --arg ssh "$ssh_source" '
       .[0] as $base
       | .[1] as $overlay
       | $base * $overlay
       | .features = (($base.features // {}) * ($overlay.features // {}))
       | .mounts = (($base.mounts // []) + ($overlay.mounts // []) | unique)
+      | if $ssh != "" then .mounts += ["type=bind,source=\($ssh),target=/ssh-agent"] | .containerEnv.SSH_AUTH_SOCK = "/ssh-agent" | .postStartCommand = "sudo chmod 666 /ssh-agent" else . end
       | .customizations.vscode.extensions = (($base.customizations.vscode.extensions // []) + ($overlay.customizations.vscode.extensions // []) | unique)
       | if .build then .build.context = $ctx | .build.dockerfile = ($ctx + "/" + .build.dockerfile) else . end
     ' "$config" "$overlay" > "$merged_config" || {
