@@ -70,7 +70,7 @@ fi
 files=(
   .gitconfig
   .alias
-  .devcontainer-helpers
+  .devcontainer-helpers.sh
   .devcontainer
   .zshrc
   .tmux.conf

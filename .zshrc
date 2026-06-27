@@ -25,7 +25,7 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 # Source additional files; alias, post-rc
 if [ -f $HOME/.alias ]; then source $HOME/.alias; fi
 
-if command -v devcontainer &>/dev/null && [ -f $HOME/.devcontainer-helpers ]; then source $HOME/.devcontainer-helpers; fi
+if command -v devcontainer &>/dev/null && [ -f $HOME/.devcontainer-helpers.sh ]; then source $HOME/.devcontainer-helpers.sh; fi
 
 if [ -f $HOME/.post-rc ]; then source $HOME/.post-rc; fi
 
