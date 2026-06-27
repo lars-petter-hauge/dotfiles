@@ -128,6 +128,10 @@ function dev() {
 
   local container_id
   container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
+  if [[ -n "$container_id" && "$no_ssh" == "1" ]]; then
+    docker rm -f "$container_id" >/dev/null
+    container_id=""
+  fi
   if [[ -z "$container_id" ]]; then
     dcup "$no_ssh" "$ws" "${extra[@]}" || return 1
     container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
