@@ -1,5 +1,5 @@
 #!/bin/bash
-trap 'echo "Warning: error on line $LINENO: $BASH_COMMAND" >&2' ERR
+set -e
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
@@ -20,7 +20,8 @@ if command -v rustup &>/dev/null && ! rustup show active-toolchain &>/dev/null; 
 fi
 
 if command -v sudo &>/dev/null; then
-  sudo chown -R "$(id -u):$(id -g)" "$HOME/.cargo" "$HOME/.cache" "$HOME/.npm" "$HOME/.local" "$HOME/.ssh" 2>/dev/null || true
+  mkdir -p "$HOME/.tmux"
+  sudo chown -R "$(id -u):$(id -g)" "$HOME/.cargo" "$HOME/.cache" "$HOME/.npm" "$HOME/.local" "$HOME/.ssh" "$HOME/.tmux" 2>/dev/null || true
 fi
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
