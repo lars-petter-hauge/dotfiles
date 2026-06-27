@@ -3,7 +3,5 @@
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."
-  },
-  "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/${localWorkspaceFolderBasename},type=bind",
-  "workspaceFolder": "/home/vscode/${localWorkspaceFolderBasename}"
+  }
 }

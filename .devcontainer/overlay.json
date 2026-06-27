@@ -11,7 +11,6 @@
   "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind",
   "workspaceFolder": "${localWorkspaceFolder}",
   "mounts": [
-    "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
     "type=volume,source=devcontainer-nix,target=/nix",
     "type=volume,source=devcontainer-cargo-registry,target=/home/vscode/.cargo/registry",
     "type=volume,source=devcontainer-pip-cache,target=/home/vscode/.cache/pip",
