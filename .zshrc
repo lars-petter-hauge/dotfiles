@@ -7,8 +7,8 @@ if [ -d "$HOME/.zsh_history_dir" ]; then
   HISTFILE="$HOME/.zsh_history_dir/.zsh_history"
 fi
 
-# Homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv 2>/dev/null || /opt/homebrew/bin/brew shellenv 2>/dev/null)" 2>/dev/null
+# Nix
+. "$HOME/.nix-profile/etc/profile.d/nix.sh" 2>/dev/null || true
 
 export PATH="$(brew --prefix rustup 2>/dev/null)/bin:$PATH"
 

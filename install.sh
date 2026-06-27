@@ -3,17 +3,51 @@ set -e
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-if ! command -v brew &>/dev/null; then
-  mkdir -p "$HOME/.cache"
-  if [ -d "$HOME/.cache" ] && [ ! -w "$HOME/.cache" ]; then
-    sudo chown -R "$(id -u):$(id -g)" "$HOME/.cache"
-  fi
-  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Install Nix if not present
+if ! command -v nix &>/dev/null; then
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon
 fi
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv 2>/dev/null || /opt/homebrew/bin/brew shellenv 2>/dev/null)" 2>/dev/null
+. "$HOME/.nix-profile/etc/profile.d/nix.sh" 2>/dev/null || true
 
-brew bundle install --file="$DOTFILES_DIR/Brewfile"
-export PATH="$(brew --prefix rustup 2>/dev/null)/bin:$HOME/.cargo/bin:$PATH"
+# Install packages
+nix profile install \
+  nixpkgs#azure-cli \
+  nixpkgs#bzip2 \
+  nixpkgs#cmake \
+  nixpkgs#fzf \
+  nixpkgs#gcc \
+  nixpkgs#gdb \
+  nixpkgs#gh \
+  nixpkgs#git \
+  nixpkgs#glib \
+  nixpkgs#gnused \
+  nixpkgs#guile \
+  nixpkgs#htop \
+  nixpkgs#jq \
+  nixpkgs#libssh \
+  nixpkgs#meson \
+  nixpkgs#neovim \
+  nixpkgs#nginx \
+  nixpkgs#nodejs \
+  nixpkgs#openmpi \
+  nixpkgs#pkg-config \
+  nixpkgs#pre-commit \
+  nixpkgs#prettier \
+  nixpkgs#python312 \
+  nixpkgs#delta \
+  nixpkgs#ripgrep \
+  nixpkgs#ruff \
+  nixpkgs#rustup \
+  nixpkgs#starship \
+  nixpkgs#tmux \
+  nixpkgs#tree \
+  nixpkgs#uv \
+  nixpkgs#watch \
+  nixpkgs#wget \
+  nixpkgs#zsh \
+  nixpkgs#zstd
+
+gh extension install github/copilot-cli 2>/dev/null || true
 
 if command -v rustup &>/dev/null && ! rustup show active-toolchain &>/dev/null; then
   rustup default stable
@@ -21,7 +55,7 @@ fi
 
 if command -v sudo &>/dev/null; then
   mkdir -p "$HOME/.tmux"
-  sudo chown -R "$(id -u):$(id -g)" "$HOME/.cargo" "$HOME/.cache" "$HOME/.npm" "$HOME/.local" "$HOME/.ssh" "$HOME/.tmux" 2>/dev/null || true
+  sudo chown -R "$(id -u):$(id -g)" "$HOME/.cargo" "$HOME/.cache" "$HOME/.local" "$HOME/.tmux" 2>/dev/null || true
 fi
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
