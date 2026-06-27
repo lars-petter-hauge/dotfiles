@@ -1,6 +1,7 @@
 function _dc_config_paths() {
   local ws="$1"
-  shift
+  local no_ssh="$2"
+  shift 2
   local -a extra_mounts=("$@")
 
   local config
@@ -28,10 +29,12 @@ function _dc_config_paths() {
     config_dir="$(cd "$(dirname "$config")" && pwd)"
 
     local ssh_source=""
-    if [[ "$(uname)" == "Darwin" ]]; then
-      ssh_source="/run/host-services/ssh-auth.sock"
-    elif [[ -n "$SSH_AUTH_SOCK" ]]; then
-      ssh_source="$SSH_AUTH_SOCK"
+    if [[ "$no_ssh" != "1" ]]; then
+      if [[ "$(uname)" == "Darwin" ]]; then
+        ssh_source="/run/host-services/ssh-auth.sock"
+      elif [[ -n "$SSH_AUTH_SOCK" ]]; then
+        ssh_source="$SSH_AUTH_SOCK"
+      fi
     fi
 
     local extra_mounts_json="[]"
@@ -72,13 +75,14 @@ EOF
 # Build and start a devcontainer for the given workspace.
 # Additional arguments are paths to extra projects mounted into the container.
 function dcup() {
-  local ws="${1:-.}"
+  local no_ssh="$1"
+  local ws="${2:-.}"
   ws="$(cd "$ws" && pwd)"
-  shift 2>/dev/null || true
+  shift 2 2>/dev/null || true
   local -a extra=("$@")
 
   local -a config_paths
-  config_paths=("${(@f)$(_dc_config_paths "$ws" "${extra[@]}")}") || return 1
+  config_paths=("${(@f)$(_dc_config_paths "$ws" "$no_ssh" "${extra[@]}")}") || return 1
   local merged_config="${config_paths[1]}"
   local generated_config="${config_paths[2]}"
 
@@ -101,7 +105,14 @@ function dcup() {
 #   dev              - use current directory as workspace
 #   dev project      - use project as workspace
 #   dev projA projB  - projA as workspace, projB mounted alongside
+#   dev --no-ssh project  - without SSH agent access
 function dev() {
+  local no_ssh="0"
+  if [[ "$1" == "--no-ssh" ]]; then
+    no_ssh="1"
+    shift
+  fi
+
   local ws
   local -a extra=()
 
@@ -118,7 +129,7 @@ function dev() {
   local container_id
   container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
   if [[ -z "$container_id" ]]; then
-    dcup "$ws" "${extra[@]}" || return 1
+    dcup "$no_ssh" "$ws" "${extra[@]}" || return 1
     container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
   fi
 
