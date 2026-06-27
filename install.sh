@@ -5,6 +5,9 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Install Nix if not present
 if ! command -v nix &>/dev/null; then
+  if [ -d /nix ] && [ ! -w /nix ]; then
+    sudo chown -R "$(id -u):$(id -g)" /nix
+  fi
   sh <(curl -L https://nixos.org/nix/install) --no-daemon
 fi
 . "$HOME/.nix-profile/etc/profile.d/nix.sh" 2>/dev/null || true
