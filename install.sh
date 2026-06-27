@@ -15,6 +15,10 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv 2>/dev/null || /opt/homebre
 brew bundle install --file="$DOTFILES_DIR/Brewfile"
 export PATH="$(brew --prefix rustup 2>/dev/null)/bin:$HOME/.cargo/bin:$PATH"
 
+if command -v rustup &>/dev/null && ! rustup show active-toolchain &>/dev/null; then
+  rustup default stable
+fi
+
 if command -v sudo &>/dev/null; then
   sudo chown -R "$(id -u):$(id -g)" "$HOME/.cargo" "$HOME/.cache" "$HOME/.npm" "$HOME/.local" "$HOME/.ssh" 2>/dev/null || true
 fi
