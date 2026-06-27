@@ -21,7 +21,9 @@ if ! command -v nix &>/dev/null; then
 fi
 . "$HOME/.nix-profile/etc/profile.d/nix.sh" 2>/dev/null || true
 
-# Install packages
+mkdir -p "$HOME/.config/nix"
+echo "experimental-features = nix-command flakes" > "$HOME/.config/nix/nix.conf"
+
 nix profile install \
   nixpkgs#azure-cli \
   nixpkgs#bzip2 \
