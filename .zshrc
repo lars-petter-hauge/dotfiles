@@ -1,6 +1,5 @@
 
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:$HOME/local/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # History
 if [ -d "$HOME/.zsh_history_dir" ]; then
@@ -10,9 +9,6 @@ fi
 # Nix
 . "$HOME/.nix-profile/etc/profile.d/nix.sh" 2>/dev/null || true
 
-export PATH="$(brew --prefix rustup 2>/dev/null)/bin:$PATH"
-
-# Add mason bin to path in order to have lsp servers in path
 export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/mason/bin:$PATH"
 
 # You may need to manually set your language environment

@@ -70,7 +70,6 @@ fi
 files=(
   .gitconfig
   .alias
-  .lima-helpers
   .devcontainer-helpers
   .devcontainer
   .zshrc
