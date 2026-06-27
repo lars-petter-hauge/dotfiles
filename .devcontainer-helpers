@@ -98,7 +98,7 @@ function dev() {
   local tmux_start_command
   tmux_start_command="$(_dc_tmux_start_command)"
 
-  docker exec -it -u vscode -w "$(docker inspect -f '{{index .Config.Labels "devcontainer.remote_workspace_folder"}}' "$container_id")" "$container_id" zsh -lc "$tmux_start_command"
+  docker exec -it -e TERM="$TERM" -u vscode -w "$ws" "$container_id" zsh -lc "$tmux_start_command"
 }
 
 function rmdev() {
