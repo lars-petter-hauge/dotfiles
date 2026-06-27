@@ -63,10 +63,8 @@ function _dc_config_paths() {
 
 function _dc_tmux_start_command() {
   cat <<'EOF'
-. "$HOME/.nix-profile/etc/profile.d/nix.sh" 2>/dev/null || true
 export TMPDIR="$(cd -P . && pwd)/.tmp"
 mkdir -p "$TMPDIR"
-SHELL="$(command -v zsh)"
 tmux set-environment -g PATH "$PATH" 2>/dev/null || true
 tmux set-environment -g TMPDIR "$TMPDIR" 2>/dev/null || true
 tmux new-session -A -s main
@@ -146,7 +144,7 @@ function dev() {
   local tmux_start_command
   tmux_start_command="$(_dc_tmux_start_command)"
 
-  docker exec -it -e TERM="$TERM" -u vscode "$container_id" zsh -lc "cd ~/$(basename "$ws") && $tmux_start_command"
+  docker exec -it -e TERM="$TERM" -u vscode "$container_id" zsh -lic "cd ~/$(basename "$ws") && $tmux_start_command"
 }
 
 function rmdev() {
