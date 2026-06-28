@@ -16,3 +16,5 @@ alias glog="git log --graph --color=always --format=\"%C(auto)%h%d %s %C(green)%
 function rf() {
     bash "$(dirname "$(readlink "$HOME/.alias")")/ripfzf.sh"
 }
+
+alias copilot="gh copilot"
