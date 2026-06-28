@@ -24,42 +24,7 @@ fi
 mkdir -p "$HOME/.config/nix"
 echo "experimental-features = nix-command flakes" > "$HOME/.config/nix/nix.conf"
 
-nix profile install \
-  nixpkgs#azure-cli \
-  nixpkgs#bzip2 \
-  nixpkgs#cmake \
-  nixpkgs#fzf \
-  nixpkgs#gcc \
-  nixpkgs#gdb \
-  nixpkgs#gh \
-  nixpkgs#git \
-  nixpkgs#glib \
-  nixpkgs#gnused \
-  nixpkgs#guile \
-  nixpkgs#htop \
-  nixpkgs#jq \
-  nixpkgs#libssh \
-  nixpkgs#meson \
-  nixpkgs#neovim \
-  nixpkgs#nginx \
-  nixpkgs#nodejs \
-  nixpkgs#openmpi \
-  nixpkgs#pkg-config \
-  nixpkgs#pre-commit \
-  nixpkgs#prettier \
-  nixpkgs#python312 \
-  nixpkgs#delta \
-  nixpkgs#ripgrep \
-  nixpkgs#ruff \
-  nixpkgs#rustup \
-  nixpkgs#starship \
-  nixpkgs#tmux \
-  nixpkgs#tree \
-  nixpkgs#uv \
-  nixpkgs#watch \
-  nixpkgs#wget \
-  nixpkgs#zsh \
-  nixpkgs#zstd
+nix profile install $(sed 's/^/nixpkgs#/' "$DOTFILES_DIR/nix-packages.txt" | tr '\n' ' ')
 
 gh extension install github/gh-copilot 2>/dev/null || true
 
