@@ -150,10 +150,8 @@ EOF
   if ! tmux has-session -t "$session_name" 2>/dev/null; then
     tmux new-session -d -s "$session_name" \
       -e "DEVCONTAINER_ID=$container_id" \
-      -e "DEVCONTAINER_NO_SSH=$no_ssh" \
-      "$wrapper"
+      -e "DEVCONTAINER_NO_SSH=$no_ssh"
   fi
-  tmux set-option -t "$session_name" default-command "$wrapper"
   tmux switch-client -t "$session_name"
 }
 
