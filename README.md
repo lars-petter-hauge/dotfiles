@@ -16,16 +16,3 @@ cd dotfiles
 ./install.sh
 ```
 
-## Lima VM
-
-A Lima-based Linux VM provides an isolated dev environment with rootless Docker.
-Works on both macOS and Linux (QEMU).
-
-```
-brew install lima
-source .alias
-dev
-```
-
-The `dev` function creates/starts the VM on first run and attaches to a tmux session.
-Provisioning installs rootless Docker, Homebrew, Brewfile packages, and symlinks dotfiles automatically.
