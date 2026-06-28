@@ -145,16 +145,16 @@ exec docker exec -it -e TERM="$TERM" -e "GH_TOKEN=\$GH_TOKEN" -u vscode $contain
 EOF
   chmod +x "$wrapper"
 
-  [[ "$no_ssh" == "1" ]] && tmux kill-session -t "=$session_name" 2>/dev/null
+  [[ "$no_ssh" == "1" ]] && tmux kill-session -t "$session_name" 2>/dev/null
 
-  if ! tmux has-session -t "=$session_name" 2>/dev/null; then
+  if ! tmux has-session -t "$session_name" 2>/dev/null; then
     tmux new-session -d -s "$session_name" \
       -e "DEVCONTAINER_ID=$container_id" \
       -e "DEVCONTAINER_NO_SSH=$no_ssh" \
-      "$wrapper" \; \
-      set-option default-command "$wrapper"
+      "$wrapper"
   fi
-  tmux switch-client -t "=$session_name"
+  tmux set-option -t "$session_name" default-command "$wrapper"
+  tmux switch-client -t "$session_name"
 }
 
 function rmdev() {
