@@ -122,7 +122,7 @@ function dev() {
     devcontainer up --workspace-folder "$ws" \
       --config "$merged_config" \
       --dotfiles-repository https://github.com/lars-petter-hauge/dotfiles \
-      --dotfiles-install-command ./install-container.sh
+      --dotfiles-install-command ./install.sh
     local exit_code=$?
 
     [[ -n "$generated_config" ]] && rm -rf "$generated_config"
