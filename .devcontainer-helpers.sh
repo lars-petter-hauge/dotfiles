@@ -135,7 +135,7 @@ function dev() {
 
   local project_name session_name
   project_name="$(basename "$ws")"
-  session_name="$(echo "$project_name" | cut -c1-3)"
+  session_name="$project_name"
 
   local wrapper="/tmp/devcontainer-exec-${session_name}"
   cat > "$wrapper" <<EOF
