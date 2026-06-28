@@ -1,3 +1,5 @@
+export NODE_COMPILE_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/node-compile-cache"
+
 function _dc_config_paths() {
   local ws="$1"
   local no_ssh="$2"
