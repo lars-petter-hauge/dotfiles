@@ -117,10 +117,12 @@ function dev() {
 
   local container_id
   container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
+
   if [[ -n "$container_id" && "$no_ssh" == "1" ]]; then
     docker rm -f "$container_id" >/dev/null
     container_id=""
   fi
+
   if [[ -z "$container_id" ]]; then
     dcup "$no_ssh" "$ws" "${extra[@]}" || return 1
     container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
@@ -131,16 +133,28 @@ function dev() {
     docker exec -u vscode "$container_id" ln -sfn "$p" "/home/vscode/$(basename "$p")" 2>/dev/null
   done
 
-  local session_name
-  session_name="$(basename "$ws")"
-  local exec_cmd="docker exec -it -e TERM=\"$TERM\" -u vscode -w \"/home/vscode/$session_name\" $container_id zsh -li"
+  local project_name session_name
+  project_name="$(basename "$ws")"
+  session_name="$(echo "$project_name" | cut -c1-3)"
 
-  if tmux has-session -t "=$session_name" 2>/dev/null; then
-    tmux attach-session -t "=$session_name"
-  else
-    tmux new-session -s "$session_name" -e "DEVCONTAINER_ID=$container_id" "$exec_cmd" \; \
-      set-option default-command "$exec_cmd"
+  local wrapper="/tmp/devcontainer-exec-${session_name}"
+  cat > "$wrapper" <<EOF
+#!/bin/sh
+GH_TOKEN=\$(cat ~/.config/gh-copilot-token 2>/dev/null)
+exec docker exec -it -e TERM="$TERM" -e "GH_TOKEN=\$GH_TOKEN" -u vscode $container_id zsh -lic "cd ~/'$project_name' && exec zsh -li"
+EOF
+  chmod +x "$wrapper"
+
+  [[ "$no_ssh" == "1" ]] && tmux kill-session -t "=$session_name" 2>/dev/null
+
+  if ! tmux has-session -t "=$session_name" 2>/dev/null; then
+    tmux new-session -d -s "$session_name" \
+      -e "DEVCONTAINER_ID=$container_id" \
+      -e "DEVCONTAINER_NO_SSH=$no_ssh" \
+      "$wrapper" \; \
+      set-option default-command "$wrapper"
   fi
+  tmux switch-client -t "=$session_name"
 }
 
 function rmdev() {
