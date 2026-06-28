@@ -61,7 +61,7 @@ nix profile install \
   nixpkgs#zsh \
   nixpkgs#zstd
 
-gh extension install github/copilot-cli 2>/dev/null || true
+gh extension install github/gh-copilot 2>/dev/null || true
 
 if command -v rustup &>/dev/null && ! rustup show active-toolchain &>/dev/null; then
   rustup default stable
