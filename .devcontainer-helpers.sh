@@ -61,16 +61,6 @@ function _dc_config_paths() {
 }
 
 
-function _dc_tmux_start_command() {
-  cat <<'EOF'
-export TMPDIR="$(cd -P . && pwd)/.tmp"
-mkdir -p "$TMPDIR"
-tmux set-environment -g PATH "$PATH" 2>/dev/null || true
-tmux set-environment -g TMPDIR "$TMPDIR" 2>/dev/null || true
-tmux new-session -A -s main
-EOF
-}
-
 # Build and start a devcontainer for the given workspace.
 # Additional arguments are paths to extra projects mounted into the container.
 function dcup() {
@@ -141,10 +131,16 @@ function dev() {
     docker exec -u vscode "$container_id" ln -sfn "$p" "/home/vscode/$(basename "$p")" 2>/dev/null
   done
 
-  local tmux_start_command
-  tmux_start_command="$(_dc_tmux_start_command)"
+  local session_name
+  session_name="$(basename "$ws")"
+  local exec_cmd="docker exec -it -e TERM=\"$TERM\" -u vscode -w \"/home/vscode/$session_name\" $container_id zsh -li"
 
-  docker exec -it -e TERM="$TERM" -u vscode "$container_id" zsh -lic "cd ~/$(basename "$ws") && $tmux_start_command"
+  if tmux has-session -t "=$session_name" 2>/dev/null; then
+    tmux attach-session -t "=$session_name"
+  else
+    tmux new-session -s "$session_name" -e "DEVCONTAINER_ID=$container_id" "$exec_cmd" \; \
+      set-option default-command "$exec_cmd"
+  fi
 }
 
 function rmdev() {
