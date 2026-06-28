@@ -128,9 +128,10 @@ function dev() {
     container_id=$(docker ps -q --filter "label=devcontainer.local_folder=$ws")
   fi
 
-  docker exec -u vscode "$container_id" ln -sfn "$ws" "/home/vscode/$(basename "$ws")" 2>/dev/null
+  docker exec -u vscode "$container_id" mkdir -p /home/vscode/projects 2>/dev/null
+  docker exec -u vscode "$container_id" ln -sfn "$ws" "/home/vscode/projects/$(basename "$ws")" 2>/dev/null
   for p in "${extra[@]}"; do
-    docker exec -u vscode "$container_id" ln -sfn "$p" "/home/vscode/$(basename "$p")" 2>/dev/null
+    docker exec -u vscode "$container_id" ln -sfn "$p" "/home/vscode/projects/$(basename "$p")" 2>/dev/null
   done
 
   local project_name session_name
@@ -141,7 +142,7 @@ function dev() {
   cat > "$wrapper" <<EOF
 #!/bin/sh
 GH_TOKEN=\$(cat ~/.config/gh-copilot-token 2>/dev/null)
-exec docker exec -it -e TERM="$TERM" -e "GH_TOKEN=\$GH_TOKEN" -u vscode $container_id zsh -lic "cd ~/'$project_name' && exec zsh -li"
+exec docker exec -it -e TERM="$TERM" -e "GH_TOKEN=\$GH_TOKEN" -u vscode $container_id zsh -lic "cd ~/projects/'$project_name' && exec zsh -li"
 EOF
   chmod +x "$wrapper"
 
