@@ -23,7 +23,6 @@ files=(
   .alias
   .zshrc
   .tmux.conf
-  .tmux/default-cmd.sh
   .config/nvim
   .config/starship.toml
   .copilot/copilot-instructions.md
