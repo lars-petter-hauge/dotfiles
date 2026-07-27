@@ -7,6 +7,7 @@ if [ -d "$HOME/.zsh_history_dir" ]; then
 fi
 HISTSIZE=50000
 SAVEHIST=50000
+setopt INC_APPEND_HISTORY
 
 export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/mason/bin:$PATH"
 
