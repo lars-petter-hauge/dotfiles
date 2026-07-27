@@ -2,11 +2,13 @@
 
 ## Requirements
 
-Using brew as package manager, the Brewfile contains all packages necessary. Install brew and run
+Install brew, then run:
 
 ```
 brew bundle install
 ```
+
+`gh` and `tree` in the Brewfile are optional extras (used by the `copilot` and `tree` aliases).
 
 ## Symlink config files
 

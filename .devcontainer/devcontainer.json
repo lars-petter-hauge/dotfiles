@@ -1,7 +1,0 @@
-{
-  "name": "default",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": "."
-  }
-}
