@@ -5,6 +5,8 @@ export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 if [ -d "$HOME/.zsh_history_dir" ]; then
   HISTFILE="$HOME/.zsh_history_dir/.zsh_history"
 fi
+HISTSIZE=50000
+SAVEHIST=50000
 
 export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/mason/bin:$PATH"
 
