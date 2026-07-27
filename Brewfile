@@ -6,6 +6,7 @@ brew "git-delta"
 brew "fzf"
 brew "ripgrep"
 brew "bat"
+brew "rust"
 
 # Optional
 brew "gh"
