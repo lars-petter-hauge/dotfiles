@@ -1,6 +1,9 @@
 # Personal Coding Style Preferences
 
-- Do not write comments
+- Do not write comments, but do not remove existing comments either
+- Favour small code changes. Ask for confirmation if larger changes are required
+- Readable code is crucial. Avoid adding unnecessary complexity.
+- Do not reorder imports/reformat or clean up adjacent code unless required/asked for.
 
 ### Code Intelligence
 
