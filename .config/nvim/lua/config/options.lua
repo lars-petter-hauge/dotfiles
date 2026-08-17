@@ -9,6 +9,9 @@
 vim.g.lazyvim_python_lsp = "ty"
 vim.g.lazyvim_python_ruff = "ruff"
 
+vim.opt.title = true
+vim.opt.titlestring = "nvim"
+
 vim.opt.clipboard = "unnamedplus"
 if vim.fn.has("linux") == 1 then
 	vim.g.clipboard = {
