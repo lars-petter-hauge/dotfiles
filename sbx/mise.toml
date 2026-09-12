@@ -1,0 +1,21 @@
+[tools]
+bat = "latest"
+fzf = "latest"
+ripgrep = "latest"
+delta = "latest"
+starship = "latest"
+neovim = "latest"
+jq = "latest"
+gh = "latest"
+node = "lts"
+python = "3.12"
+rust = "stable"
+uv = "latest"
+ruff = "latest"
+pre-commit = "latest"
+"npm:prettier" = "latest"
+"npm:@github/copilot" = "latest"
+"pipx:azure-cli" = "latest"
+
+[settings]
+lockfile = true

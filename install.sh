@@ -4,6 +4,9 @@ set -e
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 required_tools=(nvim tmux starship git delta fzf rg bat)
+if [ -z "${DOTFILES_SANDBOX:-}" ]; then
+  required_tools+=(docker sbx jq)
+fi
 
 missing=()
 for tool in "${required_tools[@]}"; do
@@ -28,6 +31,10 @@ files=(
   .copilot/copilot-instructions.md
   .copilot/lsp-config.json
 )
+
+if [ -z "${DOTFILES_SANDBOX:-}" ]; then
+  files+=(.sbx-helpers.sh .tmux/default-cmd.sh)
+fi
 
 mkdir -p "$HOME/.config"
 

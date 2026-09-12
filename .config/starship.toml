@@ -5,6 +5,7 @@ add_newline = false
 format = """
 [  ](bg:#a3aed2 fg:#090c0c)\
 [](bg:#769ff0 fg:#a3aed2)\
+${env_var.SANDBOX_NAME}\
 $directory\
 [](fg:#769ff0 bg:#394260)\
 $git_branch\
@@ -15,6 +16,11 @@ $python\
 $rust\
 [](fg:#1d2230)\
 $character"""
+
+[env_var.SANDBOX_NAME]
+symbol = ""
+style = "fg:#090c0c bg:#769ff0"
+format = "[ $symbol $env_value ]($style)"
 
 [directory]
 style = "fg:#090c0c bg:#769ff0"
