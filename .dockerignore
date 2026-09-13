@@ -1,1 +1,7 @@
 .git
+.github
+.sbx-helpers.sh
+.tmux
+.tmux.conf
+Brewfile
+README.md
