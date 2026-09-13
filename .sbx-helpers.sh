@@ -201,7 +201,7 @@ function dev() {
       --clone \
       --name "$name" \
       --template "$SBX_DEV_IMAGE" \
-      shell \
+      copilot \
       "$workspace" || return 1
   fi
 

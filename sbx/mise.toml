@@ -14,7 +14,6 @@ uv = "latest"
 ruff = "latest"
 pre-commit = "latest"
 "npm:prettier" = "latest"
-"npm:@github/copilot" = "latest"
 "pipx:azure-cli" = "latest"
 
 [settings]

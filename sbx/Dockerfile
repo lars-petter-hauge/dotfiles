@@ -1,4 +1,4 @@
-FROM docker/sandbox-templates:shell-docker
+FROM docker/sandbox-templates:copilot-docker
 
 USER root
 

@@ -18,10 +18,10 @@ cd dotfiles
 ./install.sh
 ```
 
-## Docker Sandbox development shell
+## Docker Sandbox development environment
 
 Use `dev` with a Git checkout to create or enter an isolated, clone-mode
-development sandbox:
+Copilot sandbox with an interactive development shell:
 
 ```
 dev .
