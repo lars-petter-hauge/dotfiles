@@ -209,7 +209,12 @@ function dev() {
   fi
 
   local wrapper="${TMPDIR:-/tmp}/sbx-exec-$name"
-  printf '#!/bin/sh\nsbx exec -it %s zsh -l\nexec "${SHELL:-/bin/zsh}" -l\n' "$name" >| "$wrapper"
+  # Docker Sandboxes exposes its managed GitHub secret as a gho_-prefixed
+  # sentinel, which makes Copilot CLI select an incompatible OAuth flow
+  # (https://github.com/docker/sbx-releases/issues/231). Forward the real
+  # fine-grained PAT with "Copilot Requests" permission under Copilot's
+  # preferred variable instead. This exposes the PAT to sandbox processes.
+  printf '#!/bin/sh\nexport COPILOT_GITHUB_TOKEN="$(cat "$HOME/.config/gh-copilot-token")"\nsbx exec -it -e COPILOT_GITHUB_TOKEN %s zsh -l\nexec "${SHELL:-/bin/zsh}" -l\n' "$name" >| "$wrapper"
   chmod +x "$wrapper"
 
   if ! tmux has-session -t "=$name" 2>/dev/null; then
