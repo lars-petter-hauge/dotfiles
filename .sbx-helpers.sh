@@ -197,7 +197,7 @@ function dev() {
   chmod +x "$wrapper"
 
   if ! tmux has-session -t "=$name" 2>/dev/null; then
-    tmux new-session -d -s "$name" "$wrapper" || return 1
+      tmux new-session -d -s "$name" "$wrapper" || return 1
   fi
 
   if [[ -n "$TMUX" ]]; then
