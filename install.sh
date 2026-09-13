@@ -3,9 +3,9 @@ set -e
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-required_tools=(nvim tmux starship git delta fzf rg bat)
+required_tools=(nvim starship git delta fzf rg bat)
 if [ -z "${DOTFILES_SANDBOX:-}" ]; then
-  required_tools+=(docker sbx jq)
+  required_tools+=(tmux docker sbx jq)
 fi
 
 missing=()
@@ -25,7 +25,6 @@ files=(
   .gitconfig
   .alias
   .zshrc
-  .tmux.conf
   .config/nvim
   .config/starship.toml
   .copilot/copilot-instructions.md
@@ -33,7 +32,7 @@ files=(
 )
 
 if [ -z "${DOTFILES_SANDBOX:-}" ]; then
-  files+=(.sbx-helpers.sh .tmux/default-cmd.sh)
+  files+=(.sbx-helpers.sh .tmux.conf .tmux/default-cmd.sh)
 fi
 
 mkdir -p "$HOME/.config"
@@ -58,27 +57,20 @@ for file in "${files[@]}"; do
   echo "Linked $file"
 done
 
-if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
-  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
-fi
+if [ -z "${DOTFILES_SANDBOX:-}" ]; then
+  if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+  fi
 
-echo "Installing tmux plugins..."
-tmux new-session -d -s _install 2>/dev/null
-~/.tmux/plugins/tpm/bin/install_plugins || true
-tmux kill-session -t _install 2>/dev/null || true
+  echo "Installing tmux plugins..."
+  tmux new-session -d -s _install 2>/dev/null
+  ~/.tmux/plugins/tpm/bin/install_plugins || true
+  tmux kill-session -t _install 2>/dev/null || true
 
-if [ -d "$HOME/.tmux/plugins/tmux-thumbs" ] && command -v cargo &>/dev/null; then
-  echo "Compiling tmux-thumbs..."
-  (cd "$HOME/.tmux/plugins/tmux-thumbs" && cargo build --release) || true
-fi
-
-# nordtheme/tmux's nord.tmux script uses BASH_SOURCE but ships without a
-# shebang. On Linux, tmux's run-shell uses /bin/sh (dash) which doesn't
-# support BASH_SOURCE, causing the theme to silently fail to load.
-# macOS is unaffected so we only patch on Linux.
-nord_tmux="$HOME/.tmux/plugins/tmux/nord.tmux"
-if [ "$(uname)" = "Linux" ] && [ -f "$nord_tmux" ] && ! head -1 "$nord_tmux" | grep -q '^#!'; then
-  sed -i '1i#!/usr/bin/env bash' "$nord_tmux"
+  if [ -d "$HOME/.tmux/plugins/tmux-thumbs" ] && command -v cargo &>/dev/null; then
+    echo "Compiling tmux-thumbs..."
+    (cd "$HOME/.tmux/plugins/tmux-thumbs" && cargo build --release) || true
+  fi
 fi
 
 echo "Installing nvim plugins (headless)..."
