@@ -181,6 +181,7 @@ function dev() {
       sbx rm "$name" || return 1
     fi
 
+    sbx secret rm github --sandbox "$name" --force >/dev/null 2>&1
     rm -f "${TMPDIR:-/tmp}/sbx-exec-$name"
 
     if _sbx_dev_template_exists; then
@@ -194,6 +195,8 @@ function dev() {
     return 0
   fi
 
+  _sbx_dev_set_github_secret "$name" || return 1
+
   if (( sandbox_status == 1 )); then
     _sbx_dev_ensure_template || return 1
 
@@ -204,8 +207,6 @@ function dev() {
       copilot \
       "$workspace" || return 1
   fi
-
-  _sbx_dev_set_github_secret "$name" || return 1
 
   local wrapper="${TMPDIR:-/tmp}/sbx-exec-$name"
   printf '#!/bin/sh\nsbx exec -it %s zsh -l\nexec "${SHELL:-/bin/zsh}" -l\n' "$name" >| "$wrapper"
