@@ -87,6 +87,19 @@ function _sbx_dev_sandbox_exists() {
   printf '%s\n' "$sandboxes" | grep -Fxq -- "$name"
 }
 
+function _sbx_dev_set_github_secret() {
+  local token_file="$HOME/.config/gh-copilot-token"
+  if [[ ! -s "$token_file" ]]; then
+    echo "dev: GitHub Copilot token not found: $token_file" >&2
+    return 1
+  fi
+
+  sbx secret set github \
+    --sandbox "$1" \
+    --command 'cat "$HOME/.config/gh-copilot-token"' \
+    --refresh on-demand >/dev/null
+}
+
 function dev() {
   local name=""
 
@@ -191,6 +204,8 @@ function dev() {
       shell \
       "$workspace" || return 1
   fi
+
+  _sbx_dev_set_github_secret "$name" || return 1
 
   local wrapper="${TMPDIR:-/tmp}/sbx-exec-$name"
   printf '#!/bin/sh\nsbx exec -it %s zsh -l\nexec "${SHELL:-/bin/zsh}" -l\n' "$name" >| "$wrapper"
