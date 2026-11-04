@@ -6,7 +6,7 @@ local map = vim.keymap.set
 map("n", "s", "ys", { desc = "Surround", remap = true })
 map("v", "s", "S", { desc = "Surround", remap = true })
 
--- Use same split as in tmux
+-- Split windows
 map("n", "<leader>wh", "<C-W>s", { desc = "Split Window Below", remap = true })
 map("n", "<leader>wv", "<C-W>v", { desc = "Split Window Right", remap = true })
 

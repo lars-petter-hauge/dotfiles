@@ -1,7 +1,6 @@
 tap "docker/tap"
 
 brew "neovim"
-brew "tmux"
 brew "starship"
 brew "git"
 brew "git-delta"
