@@ -42,7 +42,7 @@ function _sbx_dev_valid_name() {
 function _sbx_dev_template_exists() {
   sbx template ls --json |
     jq -e --arg image "$SBX_DEV_IMAGE" '
-      any(.images[];
+      any(.[];
         (.repository + ":" + .tag) == $image or
         ("docker.io/" + .repository + ":" + .tag) == $image or
         (.repository + ":" + .tag) == ("docker.io/" + $image)
