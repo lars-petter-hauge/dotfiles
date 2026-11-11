@@ -1,3 +1,17 @@
+keybinds {
+    unbind "Ctrl h"
+    shared_except "locked" "move" {
+        bind "Ctrl h" { MoveFocusOrTab "Left"; }
+        bind "Ctrl j" { MoveFocus "Down"; }
+        bind "Ctrl k" { MoveFocus "Up"; }
+        bind "Ctrl l" { MoveFocusOrTab "Right"; }
+        bind "Alt m" { SwitchToMode "Move"; }
+    }
+    move {
+        bind "Alt m" "esc" { SwitchToMode "Normal"; }
+    }
+}
+
 load_plugins {
     autolock
 }

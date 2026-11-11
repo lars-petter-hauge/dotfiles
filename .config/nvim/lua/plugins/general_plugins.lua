@@ -198,10 +198,10 @@ return {
 			"ZellijNavigateRight",
 		},
 		keys = {
-			{ "<a-left>", "<cmd>ZellijNavigateLeftTab<cr>" },
-			{ "<a-down>", "<cmd>ZellijNavigateDown<cr>" },
-			{ "<a-up>", "<cmd>ZellijNavigateUp<cr>" },
-			{ "<a-right>", "<cmd>ZellijNavigateRightTab<cr>" },
+			{ "<c-h>", "<cmd>ZellijNavigateLeftTab<cr>" },
+			{ "<c-j>", "<cmd>ZellijNavigateDown<cr>" },
+			{ "<c-k>", "<cmd>ZellijNavigateUp<cr>" },
+			{ "<c-l>", "<cmd>ZellijNavigateRightTab<cr>" },
 		},
 		opts = {},
 		init = function()
