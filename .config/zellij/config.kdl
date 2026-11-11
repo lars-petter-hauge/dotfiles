@@ -1,0 +1,11 @@
+load_plugins {
+    autolock
+}
+
+plugins {
+    autolock location="https://github.com/fresh2dev/zellij-autolock/releases/download/0.3.0/zellij-autolock.wasm" {
+        triggers "nvim|vim"
+        watch_triggers "fzf"
+        watch_interval "1.0"
+    }
+}

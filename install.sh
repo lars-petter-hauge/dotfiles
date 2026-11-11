@@ -27,6 +27,7 @@ files=(
   .zshrc
   .config/nvim
   .config/starship.toml
+  .config/zellij
   .copilot/copilot-instructions.md
   .copilot/lsp-config.json
 )
