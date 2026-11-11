@@ -1,10 +1,9 @@
 keybinds {
-    unbind "Ctrl h"
     shared_except "locked" "move" {
-        bind "Ctrl h" { MoveFocusOrTab "Left"; }
+        bind "Ctrl h" { MoveFocus "Left"; }
         bind "Ctrl j" { MoveFocus "Down"; }
         bind "Ctrl k" { MoveFocus "Up"; }
-        bind "Ctrl l" { MoveFocusOrTab "Right"; }
+        bind "Ctrl l" { MoveFocus "Right"; }
         bind "Alt m" { SwitchToMode "Move"; }
     }
     move {
