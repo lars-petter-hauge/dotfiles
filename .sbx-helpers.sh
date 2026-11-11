@@ -176,6 +176,7 @@ function dev() {
 
   if [[ "$action" == "rm" ]]; then
     if (( sandbox_status == 0 )); then
+      sbx exec "$name" zellij kill-all-sessions -y >/dev/null 2>&1
       sbx rm "$name" || return 1
     fi
 
