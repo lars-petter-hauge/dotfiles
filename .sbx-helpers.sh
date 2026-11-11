@@ -211,6 +211,7 @@ function dev() {
   # fine-grained PAT with "Copilot Requests" permission under Copilot's
   # preferred variable instead. This exposes the PAT to sandbox processes.
   export COPILOT_GITHUB_TOKEN="$(cat "$HOME/.config/gh-copilot-token")"
+  sbx exec "$name" git -C "$workspace" remote add host /run/sandbox/source 2>/dev/null
   sbx exec -it -e COPILOT_GITHUB_TOKEN -e SHELL=/bin/zsh "$name" zellij attach --create main
   exec "${SHELL:-/bin/zsh}" -l
 }
