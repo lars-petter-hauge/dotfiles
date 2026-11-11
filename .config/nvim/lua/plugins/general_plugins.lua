@@ -198,12 +198,17 @@ return {
 			"ZellijNavigateRight",
 		},
 		keys = {
-			{ "<c-h>", "<cmd>ZellijNavigateLeft<cr>" },
-			{ "<c-j>", "<cmd>ZellijNavigateDown<cr>" },
-			{ "<c-k>", "<cmd>ZellijNavigateUp<cr>" },
-			{ "<c-l>", "<cmd>ZellijNavigateRight<cr>" },
+			{ "<a-left>", "<cmd>ZellijNavigateLeftTab<cr>" },
+			{ "<a-down>", "<cmd>ZellijNavigateDown<cr>" },
+			{ "<a-up>", "<cmd>ZellijNavigateUp<cr>" },
+			{ "<a-right>", "<cmd>ZellijNavigateRightTab<cr>" },
 		},
 		opts = {},
+		init = function()
+			vim.api.nvim_create_autocmd("VimLeave", {
+				command = "silent !zellij action switch-mode normal",
+			})
+		end,
 	},
 	{
 		"folke/noice.nvim",
