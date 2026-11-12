@@ -48,11 +48,6 @@ return {
 		},
 	},
 	{
-		"github/copilot.vim",
-		keys = {},
-		lazy = false,
-	},
-	{
 		"tpope/vim-fugitive",
 		keys = {
 			{
