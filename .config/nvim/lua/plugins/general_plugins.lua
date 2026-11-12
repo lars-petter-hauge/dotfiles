@@ -180,7 +180,8 @@ return {
 				},
 			},
 		},
-		config = function()
+		config = function(_, opts)
+			require("flash").setup(opts)
 			setupCustomHighlightGroup()
 		end,
 	},
