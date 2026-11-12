@@ -1,3 +1,5 @@
+scrollback_editor "nvim"
+
 keybinds {
     shared_except "locked" "move" {
         bind "Ctrl h" { MoveFocus "Left"; }
