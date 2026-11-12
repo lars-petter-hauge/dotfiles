@@ -5,7 +5,8 @@ USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential gdb cmake meson pkg-config \
     libglib2.0-dev libssh-dev libopenmpi-dev guile-3.0 \
-    bzip2 zstd htop tree watch wget zsh \
+    bzip2 zstd htop tree watch wget zsh locales \
+    && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
 USER agent
