@@ -11,6 +11,15 @@ vim.g.lazyvim_python_ruff = "ruff"
 
 vim.opt.clipboard = "unnamedplus"
 if vim.fn.has("linux") == 1 then
+	local function paste()
+		local lines = vim.fn.getreg('"', 1, true)
+		local regtype = vim.fn.getregtype('"'):sub(1, 1)
+		if regtype ~= "v" then
+			table.insert(lines, "")
+		end
+		return { lines, regtype }
+	end
+
 	vim.g.clipboard = {
 		name = "OSC 52",
 		copy = {
@@ -18,8 +27,8 @@ if vim.fn.has("linux") == 1 then
 			["*"] = require("vim.ui.clipboard.osc52").copy("*"),
 		},
 		paste = {
-			["+"] = require("vim.ui.clipboard.osc52").paste("+"),
-			["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+			["+"] = paste,
+			["*"] = paste,
 		},
 	}
 end
