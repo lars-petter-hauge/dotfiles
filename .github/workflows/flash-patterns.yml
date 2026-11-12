@@ -1,0 +1,26 @@
+name: Flash pattern tests
+
+on:
+  push:
+    paths:
+      - .config/nvim/lua/plugins/flash.lua
+      - tests/flash.lua
+      - .github/workflows/flash-patterns.yml
+  pull_request:
+    paths:
+      - .config/nvim/lua/plugins/flash.lua
+      - tests/flash.lua
+      - .github/workflows/flash-patterns.yml
+
+permissions:
+  contents: read
+
+jobs:
+  patterns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Neovim
+        run: sudo apt-get update && sudo apt-get install --yes --no-install-recommends neovim
+      - name: Test patterns
+        run: nvim --headless -u NONE -l tests/flash.lua
