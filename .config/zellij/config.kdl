@@ -1,5 +1,6 @@
 scrollback_editor "nvim"
 bars_hidden_on_start "all"
+default_layout "compact"
 
 keybinds {
     shared_except "locked" "move" {
